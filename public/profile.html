@@ -1,0 +1,40 @@
+<!-- public/profile.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>User Profile</title>
+    <script>
+        function logout() {
+            fetch('/logout', { method: 'GET' })
+                .then(response => {
+                    if (response.ok) {
+                        window.location.href = '/signin'; // Redirect to sign-in after logout
+                    }
+                });
+        }
+
+        function getPokemon() {
+            fetch('/pokemon') // Calls the endpoint to get Pokémon data
+                .then(response => response.json())
+                .then(data => {
+                    const pokemonList = document.getElementById('pokemon-list');
+                    pokemonList.innerHTML = ''; // Clear any existing content
+
+                    // Display Pokémon data
+                    data.results.forEach(pokemon => {
+                        const listItem = document.createElement('li');
+                        listItem.textContent = pokemon.name;
+                        pokemonList.appendChild(listItem);
+                    });
+                });
+        }
+    </script>
+</head>
+<body>
+    <h1>Welcome to Your Profile</h1>
+    <button onclick="logout()">Log Out</button> <!-- Logout button -->
+    <button onclick="getPokemon()">Get Pokémon</button> <!-- Button to fetch Pokémon data -->
+    <ul id="pokemon-list"></ul> <!-- List to display fetched Pokémon -->
+</body>
+</html>

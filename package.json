@@ -1,0 +1,21 @@
+{
+  "name": "pokedexcollector",
+  "version": "1.0.0",
+  "description": "Project for displaying Pokémon information on lookup",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcrypt": "^5.1.1",
+    "body-parser": "^1.20.2",
+    "cookie-parser": "^1.4.6",
+    "express": "^4.19.2",
+    "express-session": "^1.18.0",
+    "sqlite-async": "^1.2.0",
+    "sqlite3": "^5.1.7"
+  }
+}
