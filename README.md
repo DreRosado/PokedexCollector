@@ -1,2 +1,2 @@
-# PokedexCollector
-Project for displaying Pokemon information on lookup
+# PokédexCollector
+Project for displaying Pokémon information on lookup
