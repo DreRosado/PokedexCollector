@@ -52,11 +52,11 @@ app.get('/', (req, res) => {
 
 // Sign-in form
 app.get('/signin', (req, res) => {
-    res.sendFile('public/signin.html', { root: 'PokedexCollector' });
+    res.sendFile('signin.html', { root: 'public' });
 });
 
 app.get('/signup', (req, res) => {
-    res.sendFile('public/signup.html', { root: 'PokedexCollector' });
+    res.sendFile('signup.html', { root: 'public' });
 });
 
 // Handle sign-in form submission
@@ -118,7 +118,7 @@ app.post('/signup', async (req, res) => {
 
 
 app.get('/profile', isAuthenticated, (req, res) => {
-    res.sendFile('public/profile.html', { root: 'PokedexCollector' }); // Serve the profile HTML file
+    res.sendFile('profile.html', { root: 'public' }); // Serve the profile HTML file
 });
 
 
@@ -146,6 +146,25 @@ app.get('/pokemon', isAuthenticated, (req, res) => {
             console.error('Error fetching Pokémon:', error); // Log error for debugging
             res.status(500).send('Internal server error'); // Handle fetch errors
         });
+});
+
+app.get('/pokemon/:idOrName', isAuthenticated, async (req, res) => {
+    const idOrName = req.params.idOrName;
+    const apiUrl = `https://pokeapi.co/api/v2/pokemon/${idOrName}`;
+
+    try {
+        const response = await fetch(apiUrl);
+        
+        if (response.ok) {
+            const data = await response.json();
+            res.json(data); // Return the fetched Pokémon data as JSON
+        } else {
+            res.status(404).send(`Pokémon with ID or Name '${idOrName}' not found.`);
+        }
+    } catch (error) {
+        console.error(`Error fetching Pokémon with ID or Name '${idOrName}':`, error); // Log the error for debugging
+        res.status(500).send('Internal server error');
+    }
 });
 
 // Start the server
