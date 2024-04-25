@@ -22,10 +22,46 @@
         </ul>
     </nav>
     <main>
-        <!-- Content will go here -->
+        <!-- This section will be updated with the fetched Pokémon data -->
+        <div id="pokemonDisplay">
+            <!-- Fetched Pokémon information will be displayed here -->
+        </div>
     </main>
     <footer>
         <!-- Footer content -->
     </footer>
+
+    <script>
+        document.getElementById("searchButton").addEventListener("click", function() {
+            const searchInput = document.getElementById("searchInput").value.trim();
+
+            if (searchInput) {
+                const apiUrl = `/pokemon/${searchInput.toLowerCase()}`;
+
+                fetch(apiUrl)
+                    .then((response) => {
+                        if (response.ok) {
+                            return response.json();
+                        } else {
+                            throw new Error("Pokémon not found");
+                        }
+                    })
+                    .then((pokemon) => {
+                        const display = document.getElementById("pokemonDisplay");
+                        display.innerHTML = `
+                            <h2>${pokemon.name}</h2>
+                            <img src="${pokemon.sprites.front_default}" alt="${pokemon.name}">
+                            <p>Type: ${pokemon.types.map((type) => type.type.name).join(", ")}</p>
+                        `;
+                    })
+                    .catch((error) => {
+                        console.error("Error fetching Pokémon:", error);
+                        document.getElementById("pokemonDisplay").innerHTML = "<p>Pokémon not found. Please try again.</p>";
+                    });
+            } else {
+                document.getElementById("pokemonDisplay").innerHTML = "<p>Please enter a Pokémon name.</p>";
+            }
+        });
+    </script>
 </body>
 </html>

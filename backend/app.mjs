@@ -118,7 +118,7 @@ app.post('/signup', async (req, res) => {
 
 
 app.get('/profile', isAuthenticated, (req, res) => {
-    res.sendFile('profile.html', { root: 'public' }); // Serve the profile HTML file
+    res.sendFile('pokedex.html', { root: 'public' }); // Serve the profile HTML file
 });
 
 
