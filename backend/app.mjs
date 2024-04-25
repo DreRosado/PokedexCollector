@@ -109,7 +109,7 @@ app.post('/signup', async (req, res) => {
         const hashedPassword = bcrypt.hashSync(password, 10);
         await db.run('INSERT INTO users (username, password) VALUES (?, ?)', [username, hashedPassword]);
 
-        res.status(201).send('Sign-up successful'); // Use 201 for successful resource creation
+        res.status(201).redirect('/signin');
     } catch (error) {
         console.error('Sign-up error:', error); // Log the error for debugging
         res.status(500).send('Internal server error');
