@@ -5,6 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pokedex</title>
     <link rel="stylesheet" href="Pokedex.css">
+    <style>
+        @media only screen and (max-width: 600px) {
+            nav {
+                width: 100%; /* Adjust as needed */
+                max-width: 500px; /* Set a maximum width for the sidebar */
+            }
+
+            main {
+                margin-left: 0; /* Reset margin for main content */
+            }
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -16,7 +28,7 @@
     </header>
     <nav>
         <ul>
-            <li><a href="page1.html">Page 1</a></li>
+            <li><a href="Pokedex.html" id="pokedexLink">Pokedex</a></li>
             <li><a href="page2.html">Page 2</a></li>
             <!-- Add more navigation links as needed -->
         </ul>
