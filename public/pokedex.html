@@ -5,6 +5,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pokedex</title>
     <link rel="stylesheet" href="Pokedex.css">
+    <style>
+        @media only screen and (max-width: 600px) {
+            nav {
+                width: 100%; /* Adjust as needed */
+                max-width: 500px; /* Set a maximum width for the sidebar */
+            }
+
+            main {
+                margin-left: 0; /* Reset margin for main content */
+            }
+        }
+    </style>
 </head>
 <body>
     <header>
@@ -16,7 +28,7 @@
     </header>
     <nav>
         <ul>
-            <li><a href="page1.html">Page 1</a></li>
+            <li><a href="Pokedex.html" id="pokedexLink">Pokedex</a></li>
             <li><a href="page2.html">Page 2</a></li>
             <!-- Add more navigation links as needed -->
         </ul>
@@ -27,5 +39,23 @@
     <footer>
         <!-- Footer content -->
     </footer>
+    <script>
+        // Get the current URL path
+        var path = window.location.pathname;
+
+        // Get the filename from the path (e.g., "Pokedex.html")
+        var page = path.split('/').pop();
+
+        // Remove ".html" extension from the filename
+        var pageName = page.replace('.html', '');
+
+        // Find the corresponding link in the navigation menu and add a "active" class
+        var links = document.querySelectorAll('nav a');
+        links.forEach(function(link) {
+            if (link.getAttribute('href') === page) {
+                link.classList.add('active');
+            }
+        });
+    </script>
 </body>
 </html>
