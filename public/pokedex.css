@@ -4,7 +4,11 @@ body {
     font-family: Arial, sans-serif; /* Use any preferred font */
     margin: 0; /* Remove default body margin */
     padding: 0; /* Remove default body padding */
+    display: flex; /* Use flexbox for layout */
+    flex-direction: column; /* Arrange children in a column */
+    min-height: 100vh; /* Ensure the page takes at least the full viewport height */
 }
+
 
 header {
     text-align: center;
@@ -28,6 +32,7 @@ button {
     color: #fff;
     border: none;
     cursor: pointer;
+    margin-left: 10px; 
 }
 
 nav {
@@ -54,12 +59,32 @@ nav a {
 }
 
 main {
-    margin-left: 220px; /* Adjust based on nav width and any padding/margins */
     padding: 20px;
-    display: block; /* Ensure content fills the space after the sidebar */
+    display: grid; /* Use CSS Grid for layout */
+    grid-template-columns: repeat(4, 1fr); /* Create a 4-column grid */
+    gap: 20px; /* Add gap between cards */
+    flex-grow: 1;
+    overflow-y: auto;
 }
 
 footer {
     text-align: center;
     padding: 20px 0;
+}
+
+.pokemon-card {
+    border: 1px solid #e2ae3e;
+    border-radius: 5px;
+    padding: 10px;
+    width: 100%; /* Occupy full width of grid cell */
+    text-align: center;
+}
+
+.pokemon-card h2 {
+    margin-bottom: 10px;
+}
+
+.pokemon-card img {
+    max-width: 100%;
+    height: auto;
 }
