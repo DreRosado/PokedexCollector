@@ -1,8 +1,7 @@
-// app.mjs
 import express from 'express';
+import bodyParser from 'body-parser';
 import session from 'express-session';
 import cookieParser from 'cookie-parser';
-import bodyParser from 'body-parser';
 import bcrypt from 'bcrypt';
 import { Database } from 'sqlite-async';
 
@@ -10,6 +9,7 @@ const app = express();
 const port = 3000;
 
 // Middleware setup
+app.use(express.json()); // For JSON parsing
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static('public'));
 app.use(cookieParser());
@@ -23,7 +23,6 @@ app.use(
         cookie: { maxAge: 600000, httpOnly: true }, // Session cookie settings
     })
 );
-
 
 export let db = await Database.open('db.sqlite');
 await db.run(`

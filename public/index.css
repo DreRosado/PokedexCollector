@@ -1,0 +1,64 @@
+/* Basic Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Roboto', sans-serif; /* More friendly font */
+    background-color: #f4f4f9;
+    color: #333;
+    line-height: 1.6;
+}
+
+.header-content {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px 10%;
+    background-color: #ffcb05; /* Bright and playful yellow */
+}
+
+.title-and-about {
+    display: flex;
+    align-items: center;
+    gap: 20px; /* Space between title and about link */
+}
+
+header h1 {
+    color: #3b4cca; /* Pokémon blue */
+    font-size: 2.5em;
+}
+
+.create-account, button {
+    background-color: #3b4cca; /* Consistent button color */
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    text-decoration: none;
+    font-size: 1em;
+    border-radius: 20px; /* Rounded edges */
+    cursor: pointer;
+}
+
+.about-link {
+    background-color: transparent;
+    padding: 0;
+    color: #3b4cca;
+}
+
+button:hover, .create-account:hover{
+    background-color: #2929a3; /* Darker shade for hover effect */
+    color: white;
+}
+
+.intro {
+    padding: 20px 10%;
+    text-align: center;
+}
+
+.intro p {
+    font-size: 1.4em;
+    margin-top: 20px;
+}
