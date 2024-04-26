@@ -48,7 +48,7 @@
             const searchInput = document.getElementById("searchInput").value.trim();
 
             if (searchInput) {
-                const apiUrl = `/pokemon/${searchInput.toLowerCase()}`;
+                const apiUrl = `https://pokeapi.co/api/v2/pokemon/${searchInput.toLowerCase()}`;
 
                 fetch(apiUrl)
                     .then((response) => {
@@ -60,10 +60,12 @@
                     })
                     .then((pokemon) => {
                         const display = document.getElementById("pokemonDisplay");
+                        const capitalizedPokemonName = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1); // Capitalize the Pokemon Name
+                        const capitalizedAbilities = pokemon.abilities.map((ability) => ability.ability.name.charAt(0).toUpperCase() + ability.ability.name.slice(1)).join(", "); // Capitalize abilities and join them with a comma
                         display.innerHTML = `
-                            <h2>${pokemon.name}</h2>
+                            <h2>${capitalizedPokemonName}</h2>
                             <img src="${pokemon.sprites.front_default}" alt="${pokemon.name}">
-                            <p>Type: ${pokemon.types.map((type) => type.type.name).join(", ")}</p>
+                            <p>Type: ${pokemon.types.map((type) => type.type.name.charAt(0).toUpperCase() + type.type.name.slice(1)).join(", ")}</p>
                         `;
                     })
                     .catch((error) => {
