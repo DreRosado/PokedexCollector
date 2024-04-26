@@ -19,7 +19,7 @@ async function fetchRandomPokemonData(ids) {
 
     for (const id of ids) {
         try {
-            const response = await fetch(`https://pokeapi.co/api/v2/pokemon/${id}`);
+            const response = await fetch(`/pokemon/${id}`);
             if (!response.ok) {
                 throw new Error(`Failed to fetch Pokémon with ID ${id}`);
             }
