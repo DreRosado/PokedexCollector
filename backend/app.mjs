@@ -30,7 +30,13 @@ await db.run(`
         CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY,
         username TEXT UNIQUE,
-        password TEXT
+        password TEXT,
+        pok1 INTEGER,
+        pok2 INTEGER, 
+        pok3 INTEGER, 
+        pok4 INTEGER, 
+        pok5 INTEGER, 
+        pok6 INTEGER
     )
 `);
 
@@ -131,6 +137,32 @@ app.get('/logout', (req, res) => {
             res.redirect('/signin'); // Redirect to sign-in page after logout
         }
     });
+});
+
+app.post('/add-pokemon', isAuthenticated, async (req, res) => {
+    const { position, newPokemon } = req.body; // Get the desired position and new Pokémon from the request body
+    const userId = req.session.user.id; // Get the user ID from the session
+
+    if (position < 1 || position > 6) {
+        return res.status(400).send('Position must be between 1 and 6'); // Ensure the position is valid
+    }
+
+    try {
+        // Check if the position is already occupied
+        const existingPokemon = await db.get(`SELECT pok${position} FROM users WHERE id = ?`, [userId]);
+
+        if (existingPokemon[`pok${position}`] !== null) {
+            return res.status(409).send(`Position ${position} is already occupied`); // If the position is occupied, return conflict
+        }
+
+        // Update the specified position with the new Pokémon ID
+        await db.run(`UPDATE users SET pok${position} = ? WHERE id = ?`, [newPokemon, userId]);
+
+        res.status(200).send(`Pokémon added to position ${position}`); // Success response
+    } catch (error) {
+        console.error('Error adding Pokémon:', error); // Log the error for debugging
+        res.status(500).send('Internal server error');
+    }
 });
 
 app.get('/pokemon', isAuthenticated, (req, res) => {
