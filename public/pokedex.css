@@ -1,0 +1,90 @@
+body {
+    background-color: #333; /* Dark grey or black background */
+    color: #fff; /* White text color */
+    font-family: Arial, sans-serif; /* Use any preferred font */
+    margin: 0; /* Remove default body margin */
+    padding: 0; /* Remove default body padding */
+    display: flex; /* Use flexbox for layout */
+    flex-direction: column; /* Arrange children in a column */
+    min-height: 100vh; /* Ensure the page takes at least the full viewport height */
+}
+
+
+header {
+    text-align: center;
+    padding: 1px 0;
+}
+
+.search-bar {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 0px;
+}
+
+input[type="text"] {
+    padding: 10px;
+    width: 300px;
+}
+
+button {
+    padding: 10px 20px;
+    background-color: #007bff; /* Blue color for the search button, you can change this */
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    margin-left: 10px; 
+}
+
+nav {
+    position: fixed; /* Fix the navigation to stay in place */
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 200px; /* Adjust as needed */
+    background-color: #222; /* Dark background for the navigation */
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+nav li {
+    padding: 10px;
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+}
+
+main {
+    padding: 300px;
+    display: grid; /* Use CSS Grid for layout */
+    grid-template-columns: repeat(4, 1fr); /* Create a 4-column grid */
+    gap: 20px; /* Add gap between cards */
+    flex-grow: 1;
+    overflow-y: auto;
+}
+
+footer {
+    text-align: center;
+    padding: 20px 0;
+}
+
+.pokemon-card {
+    border: 3px solid #e2b63e;
+    border-radius: 5px;
+    padding: 10px;
+    width: 100%; /* Occupy full width of grid cell */
+    text-align: center;
+}
+
+.pokemon-card h2 {
+    margin-bottom: 10px;
+}
+
+.pokemon-card img {
+    max-width: 100%;
+    height: auto;
+}

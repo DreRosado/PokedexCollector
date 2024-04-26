@@ -30,7 +30,13 @@ await db.run(`
         CREATE TABLE IF NOT EXISTS users (
         id INTEGER PRIMARY KEY,
         username TEXT UNIQUE,
-        password TEXT
+        password TEXT,
+        pok1 INTEGER,
+        pok2 INTEGER, 
+        pok3 INTEGER, 
+        pok4 INTEGER, 
+        pok5 INTEGER, 
+        pok6 INTEGER
     )
 `);
 
@@ -52,11 +58,11 @@ app.get('/', (req, res) => {
 
 // Sign-in form
 app.get('/signin', (req, res) => {
-    res.sendFile('public/signin.html', { root: 'PokedexCollector' });
+    res.sendFile('signin.html', { root: 'public' });
 });
 
 app.get('/signup', (req, res) => {
-    res.sendFile('public/signup.html', { root: 'PokedexCollector' });
+    res.sendFile('signup.html', { root: 'public' });
 });
 
 // Handle sign-in form submission
@@ -109,7 +115,7 @@ app.post('/signup', async (req, res) => {
         const hashedPassword = bcrypt.hashSync(password, 10);
         await db.run('INSERT INTO users (username, password) VALUES (?, ?)', [username, hashedPassword]);
 
-        res.status(201).send('Sign-up successful'); // Use 201 for successful resource creation
+        res.status(201).redirect('/signin');
     } catch (error) {
         console.error('Sign-up error:', error); // Log the error for debugging
         res.status(500).send('Internal server error');
@@ -118,9 +124,12 @@ app.post('/signup', async (req, res) => {
 
 
 app.get('/profile', isAuthenticated, (req, res) => {
-    res.sendFile('public/profile.html', { root: 'PokedexCollector' }); // Serve the profile HTML file
+    res.sendFile('pokedex.html', { root: 'public' }); // Serve the profile HTML file
 });
 
+app.get('/page2', isAuthenticated, (req, res) => {
+    res.sendFile('page2.html', { root: 'public' }); // Serve the profile HTML file
+});
 
 // Logout route
 app.get('/logout', (req, res) => {
@@ -131,6 +140,32 @@ app.get('/logout', (req, res) => {
             res.redirect('/signin'); // Redirect to sign-in page after logout
         }
     });
+});
+
+app.post('/add-pokemon', isAuthenticated, async (req, res) => {
+    const { position, newPokemon } = req.body; // Get the desired position and new Pokémon from the request body
+    const userId = req.session.user.id; // Get the user ID from the session
+
+    if (position < 1 || position > 6) {
+        return res.status(400).send('Position must be between 1 and 6'); // Ensure the position is valid
+    }
+
+    try {
+        // Check if the position is already occupied
+        const existingPokemon = await db.get(`SELECT pok${position} FROM users WHERE id = ?`, [userId]);
+
+        if (existingPokemon[`pok${position}`] !== null) {
+            return res.status(409).send(`Position ${position} is already occupied`); // If the position is occupied, return conflict
+        }
+
+        // Update the specified position with the new Pokémon ID
+        await db.run(`UPDATE users SET pok${position} = ? WHERE id = ?`, [newPokemon, userId]);
+
+        res.status(200).send(`Pokémon added to position ${position}`); // Success response
+    } catch (error) {
+        console.error('Error adding Pokémon:', error); // Log the error for debugging
+        res.status(500).send('Internal server error');
+    }
 });
 
 app.get('/pokemon', isAuthenticated, (req, res) => {
@@ -148,7 +183,27 @@ app.get('/pokemon', isAuthenticated, (req, res) => {
         });
 });
 
+app.get('/pokemon/:idOrName', isAuthenticated, async (req, res) => {
+    const idOrName = req.params.idOrName;
+    const apiUrl = `https://pokeapi.co/api/v2/pokemon/${idOrName}`;
+
+    try {
+        const response = await fetch(apiUrl);
+        
+        if (response.ok) {
+            const data = await response.json();
+            res.json(data); // Return the fetched Pokémon data as JSON
+        } else {
+            res.status(404).send(`Pokémon with ID or Name '${idOrName}' not found.`);
+        }
+    } catch (error) {
+        console.error(`Error fetching Pokémon with ID or Name '${idOrName}':`, error); // Log the error for debugging
+        res.status(500).send('Internal server error');
+    }
+});
+
 // Start the server
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });
+
