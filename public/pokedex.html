@@ -33,7 +33,7 @@
     <main id="pokemonDisplay"></main> <!-- Display area for Pokémon cards -->
     
     <script src="pokedex.js"></script> <!-- JavaScript file for handling interactions -->
-    
+
     <nav>
         <ul>
             <li><a href="Pokedex.html" id="pokedexLink">Pokedex</a></li>
@@ -53,7 +53,7 @@
 
     <script>
         // Fetch Pokémon names from your backend and populate the datalist
-        fetch('/pokemon?limit=151') // Fetch first 151 Pokémon
+        fetch('https://pokeapi.co/api/v2/pokemon/?limit=1026') // 
             .then((response) => response.json())
             .then((data) => {
                 const pokemonList = document.getElementById("pokemonList");
