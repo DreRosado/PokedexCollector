@@ -64,7 +64,7 @@
             const searchInput = document.getElementById("searchInput").value.trim();
 
             if (searchInput) {
-                fetch(`/pokemon/${searchInput.toLowerCase()}`)
+                fetch(`https://pokeapi.co/api/v2/pokemon/${searchInput.toLowerCase()}`)
                     .then((response) => response.json())
                     .then((pokemon) => {
                         const display = document.getElementById("pokemonDisplay");
