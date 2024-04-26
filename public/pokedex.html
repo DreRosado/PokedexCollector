@@ -31,8 +31,6 @@
         </div>
     </header>
     <main id="pokemonDisplay"></main> <!-- Display area for Pokémon cards -->
-    
-    <script src="pokedex.js"></script> <!-- JavaScript file for handling interactions -->
 
     <nav>
         <ul>
@@ -51,44 +49,6 @@
         <!-- Footer content -->
     </footer>
 
-    <script>
-        // Fetch Pokémon names from your backend and populate the datalist
-        fetch('/pokemon/?limit=1302') // 
-            .then((response) => response.json())
-            .then((data) => {
-                const pokemonList = document.getElementById("pokemonList");
-                data.results.forEach((pokemon) => {
-                    const option = document.createElement("option");
-                    option.value = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1); // Capitalize Pokémon names
-                    pokemonList.appendChild(option);
-                });
-            })
-            .catch((error) => console.error("Error fetching Pokémon list:", error));
-
-        document.getElementById("searchButton").addEventListener("click", function() {
-            const searchInput = document.getElementById("searchInput").value.trim();
-
-            if (searchInput) {
-                fetch(`/pokemon/${searchInput.toLowerCase()}`)
-                    .then((response) => response.json())
-                    .then((pokemon) => {
-                        const display = document.getElementById("pokemonDisplay");
-                        const capitalizedPokemonName = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
-                        const capitalizedAbilities = pokemon.abilities.map((ability) => ability.ability.name.charAt(0).toUpperCase() + ability.ability.name.slice(1)).join(", ");
-                        display.innerHTML = `
-                            <h2>${capitalizedPokemonName}</h2>
-                            <img src="${pokemon.sprites.front_default}" alt="${pokemon.name}">
-                            <p>Type: ${pokemon.types.map((type) => type.type.name.charAt(0).toUpperCase() + type.type.name.slice(1)).join(", ")}</p>
-                        `;
-                    })
-                    .catch((error) => {
-                        console.error("Error fetching Pokémon:", error);
-                        document.getElementById("pokemonDisplay").innerHTML = "<p>Pokémon not found. Please try again.</p>";
-                    });
-            } else {
-                document.getElementById("pokemonDisplay").innerHTML = "<p>Please enter a Pokémon name.</p>";
-            }
-        });
-    </script>
 </body>
+<script src="pokedex.js"></script> <!-- JavaScript file for handling interactions -->
 </html>
