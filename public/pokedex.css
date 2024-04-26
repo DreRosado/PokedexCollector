@@ -73,7 +73,7 @@ footer {
 }
 
 .pokemon-card {
-    border: 3px solid #e2ae3e;
+    border: 3px solid #e2b63e;
     border-radius: 5px;
     padding: 10px;
     width: 100%; /* Occupy full width of grid cell */
