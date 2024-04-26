@@ -127,6 +127,9 @@ app.get('/profile', isAuthenticated, (req, res) => {
     res.sendFile('pokedex.html', { root: 'public' }); // Serve the profile HTML file
 });
 
+app.get('/page2', isAuthenticated, (req, res) => {
+    res.sendFile('page2.html', { root: 'public' }); // Serve the profile HTML file
+});
 
 // Logout route
 app.get('/logout', (req, res) => {
