@@ -151,17 +151,10 @@ app.post('/add-pokemon', isAuthenticated, async (req, res) => {
     }
 
     try {
-        // Check if the position is already occupied
-        const existingPokemon = await db.get(`SELECT pok${position} FROM users WHERE id = ?`, [userId]);
-
-        if (existingPokemon[`pok${position}`] !== null) {
-            return res.status(409).send(`Position ${position} is already occupied`); // If the position is occupied, return conflict
-        }
-
-        // Update the specified position with the new Pokémon ID
+        // Update the specified position with the new Pokémon ID, replacing any existing one
         await db.run(`UPDATE users SET pok${position} = ? WHERE id = ?`, [newPokemon, userId]);
 
-        res.status(200).send(`Pokémon added to position ${position}`); // Success response
+        res.status(200).send(`Pokémon in position ${position} has been replaced with ${newPokemon}`); // Success response
     } catch (error) {
         console.error('Error adding Pokémon:', error); // Log the error for debugging
         res.status(500).send('Internal server error');

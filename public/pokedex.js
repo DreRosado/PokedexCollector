@@ -96,3 +96,62 @@ document.getElementById("searchButton").addEventListener("click", function () {
         document.getElementById("pokemonDisplay").innerHTML = "<p>Please enter a Pokémon name.</p>";
     }
 });
+
+document.getElementById('addPokemonButton').addEventListener('click', () => {
+    const pokemonName = document.getElementById('searchInput').value; // Get the Pokémon name from the search bar
+
+    if (!pokemonName) {
+        alert('Please enter a Pokémon name in the search bar');
+        return; // Don't proceed if no Pokémon name is entered
+    }
+
+    const popup = document.createElement('div'); // Create a popup div
+    popup.innerHTML = `
+        <div style="background-color: rgba(0, 0, 0, 0.8); padding: 10px; border-radius: 5px; text-align: center;">
+            <h2>Add Pokémon</h2>
+            <p>Pokemon Name: ${pokemonName}</p> <!-- Display the Pokémon name -->
+            <label for="position">Position (1-6):</label>
+            <input type="number" id="position" min="1" max="6">
+            <button id="confirmAdd">Add</button>
+            <button id="closePopup">Close</button>
+        </div>
+    `;
+    popup.style.position = 'fixed';
+    popup.style.top = '50%';
+    popup.style.left = '50%';
+    popup.style.transform = 'translate(-50%, -50%)';
+    popup.style.zIndex = 1000;
+    document.body.appendChild(popup); // Add the popup to the DOM
+
+    // Handle the "Add" button click to send the POST request
+    document.getElementById('confirmAdd').addEventListener('click', () => {
+        const position = document.getElementById('position').value;
+
+        if (!position || position < 1 || position > 6) {
+            alert('Please specify a valid position (1-6)');
+            return;
+        }
+
+        fetch('/add-pokemon', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `position=${position}&newPokemon=${pokemonName}`, // Send the position and Pokémon name
+        })
+            .then(response => response.text())
+            .then(data => {
+                alert(data); // Display the response
+                document.body.removeChild(popup); // Close the popup
+            })
+            .catch(error => {
+                console.error('Error adding Pokémon:', error);
+                alert('Error adding Pokémon');
+            });
+    });
+
+    // Handle the "Close" button click to close the popup
+    document.getElementById('closePopup').addEventListener('click', () => {
+        document.body.removeChild(popup); // Close the popup
+    });
+});
