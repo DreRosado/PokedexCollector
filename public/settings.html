@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Pokédex</title>
-    <link rel="stylesheet" href="Pokedex.css">
+    <title>Settings</title>
+    <link rel="stylesheet" href="settings.css">
     <style>
         @media only screen and (max-width: 600px) {
             nav {
@@ -20,18 +20,8 @@
 </head>
 <body>
     <header>
-        <h1>Pokémon Search</h1>
-        <div class="search-bar">
-            <input type="text" id="searchInput" list="pokemonList" placeholder="Search Pokémon...">
-            <datalist id="pokemonList">
-                <!-- Pokémon suggestions will be populated here -->
-            </datalist>
-            <button id="searchButton">Search</button>
-            <button id="randomizeButton">Randomize</button>
-            <button id="addPokemonButton">Add Pokémon</button> <!-- New Add Pokémon button -->
-        </div>
+        <h1>Settings</h1>
     </header>
-    <main id="pokemonDisplay"></main> <!-- Display area for Pokémon cards -->
 
     <nav>
         <ul>
@@ -43,16 +33,14 @@
             <!-- Add more navigation links as needed -->
         </ul>
     </nav>
+
     <main>
-        <!-- This section will be updated with the fetched Pokémon data -->
-        <div id="pokemonDisplay">
-            <!-- Fetched Pokémon information will be displayed here -->
-        </div>
+        <!-- This section will be updated -->
     </main>
+
     <footer>
         <!-- Footer content -->
     </footer>
-
 </body>
-<script src="pokedex.js"></script> <!-- JavaScript file for handling interactions -->
+<script src="settings.js"></script> <!-- JavaScript file for handling interactions -->
 </html>

@@ -82,7 +82,8 @@ app.post('/signin', async (req, res) => {
 
             if (passwordMatches) {
                 req.session.user = { id: user.id, username: user.username }; // Store user info in session
-                return res.redirect('/profile');
+                // return res.redirect('/profile');
+                return res.redirect('/pokedex');
             } else {
                 return res.status(401).send('Invalid username or password');
             }
@@ -121,13 +122,24 @@ app.post('/signup', async (req, res) => {
     }
 });
 
-
-app.get('/profile', isAuthenticated, (req, res) => {
-    res.sendFile('pokedex.html', { root: 'public' }); // Serve the profile HTML file
+app.get('/pokedex', isAuthenticated, (req, res) => {
+    res.sendFile('pokedex.html', { root: 'public' }); // Serve the Pokédex HTML file
 });
 
-app.get('/page2', isAuthenticated, (req, res) => {
-    res.sendFile('page2.html', { root: 'public' }); // Serve the profile HTML file
+app.get('/dailycatch', isAuthenticated, (req, res) => {
+    res.sendFile('dailycatch.html', { root: 'public' }); // Serve the Daily Catch HTML file
+});
+
+app.get('/profile', isAuthenticated, (req, res) => {
+    res.sendFile('profile.html', { root: 'public' }); // Serve the Profile HTML file
+});
+
+app.get('/settings', isAuthenticated, (req, res) => {
+    res.sendFile('settings.html', { root: 'public' }); // Serve the Settings HTML file
+});
+
+app.get('/pokemon', isAuthenticated, (req, res) => {
+    res.sendFile('pokemon.html', { root: 'public' }); // Serve the Pokémon HTML file
 });
 
 // Logout route

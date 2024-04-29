@@ -9,7 +9,6 @@ body {
     min-height: 100vh; /* Ensure the page takes at least the full viewport height */
 }
 
-
 header {
     text-align: center;
     padding: 1px 0;
@@ -59,7 +58,9 @@ nav a {
 }
 
 main {
-    padding: 300px;
+    padding-left:   300px;
+    padding-right:  300px;
+    padding-top:    50px;
     display: grid; /* Use CSS Grid for layout */
     grid-template-columns: repeat(4, 1fr); /* Create a 4-column grid */
     gap: 20px; /* Add gap between cards */
@@ -78,6 +79,8 @@ footer {
     padding: 10px;
     width: 100%; /* Occupy full width of grid cell */
     text-align: center;
+    padding-left: 0px;
+    padding-right: 0px;
 }
 
 .pokemon-card h2 {
