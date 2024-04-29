@@ -69,30 +69,27 @@ app.post('/signin', async (req, res) => {
     const { username, password } = req.body;
 
     if (!username || !password) {
-        return res.status(400).send("Username and password are required");
+        return res.status(400).json({ success: false, message: "Username and password are required" });
     }
 
     try {
-        // Retrieve the user from the database
         const user = await db.get('SELECT * FROM users WHERE username = ?', [username]);
 
         if (user) {
-            // Compare the entered password with the stored hashed password
             const passwordMatches = bcrypt.compareSync(password, user.password);
 
             if (passwordMatches) {
-                req.session.user = { id: user.id, username: user.username }; // Store user info in session
-                // return res.redirect('/profile');
-                return res.redirect('/pokedex');
+                req.session.user = { id: user.id, username: user.username };
+                return res.json({ success: true, message: 'Login successful' });
             } else {
-                return res.status(401).send('Invalid username or password');
+                return res.status(401).json({ success: false, message: 'Invalid username or password' });
             }
         } else {
-            return res.status(401).send('Invalid username or password');
+            return res.status(401).json({ success: false, message: 'Invalid username or password' });
         }
     } catch (error) {
-        console.error("Sign-in error:", error); // Log error for debugging
-        return res.status(500).send("Internal server error");
+        console.error("Sign-in error:", error);
+        return res.status(500).json({ success: false, message: "Internal server error" });
     }
 });
 
@@ -192,12 +189,12 @@ app.get('/pokemon', isAuthenticated, (req, res) => {
 });
 
 app.get('/pokemon/:idOrName', isAuthenticated, async (req, res) => {
-    const idOrName = req.params.idOrName;
+    const idOrName = req.params.idOrName.toLowerCase();
     const apiUrl = `https://pokeapi.co/api/v2/pokemon/${idOrName}`;
 
     try {
         const response = await fetch(apiUrl);
-        
+
         if (response.ok) {
             const data = await response.json();
             res.json(data); // Return the fetched Pokémon data as JSON
