@@ -1,40 +1,72 @@
-body {
-    background-color: #333; /* Dark grey or black background */
-    color: #fff; /* White text color */
-    font-family: Arial, sans-serif; /* Use any preferred font */
-    margin: 0; /* Remove default body margin */
-    padding: 0; /* Remove default body padding */
-    display: flex; /* Use flexbox for layout */
-    flex-direction: column; /* Arrange children in a column */
-    min-height: 100vh; /* Ensure the page takes at least the full viewport height */
+/* Basic Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
 }
 
+/* Body and Text Settings */
+body {
+    background-color: #f4f4f9; /* Light grey background */
+    color: #333; /* Dark text for readability */
+    font-family: 'Roboto', sans-serif; /* Modern, friendly font */
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+header, footer {
+    transition: padding-left 0.3s ease;
+}
+
+
+/* Header Styles */
 header {
     text-align: center;
     padding: 1px 0;
+    background-color: #ffcb05; /* Bright yellow for a playful, eye-catching header */
+}
+
+/* Search Bar Styles */
+.search-bar {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 0px;
+    border-radius: 20px; /* Rounded edges for a modern look */
+    background-color: #ffcb05; /* White background to contrast with the input and buttons */
+    padding: 5px; /* Padding to give elements inside some breathing room */
 }
 
 input[type="text"] {
     padding: 10px;
     width: 300px;
+    border: 2px solid #ccc; /* Subtle border for the input */
+    border-radius: 20px; /* Rounded input field */
 }
 
+/* Button Styles */
 button {
     padding: 10px 20px;
-    background-color: #007bff; /* Blue color for the search button, you can change this */
-    color: #fff;
+    background-color: #3b4cca; /* Pokémon blue for consistency */
+    color: white;
     border: none;
     cursor: pointer;
-    margin-left: 10px; 
+    margin-left: 10px;
+    border-radius: 20px; /* Fully rounded edges for a modern, friendly button */
 }
 
+button:hover {
+    background-color: #2929a3; /* Darker shade for hover effect, adds interactivity */
+}
+
+/* Navigation Styles */
 nav {
-    position: fixed; /* Fix the navigation to stay in place */
+    position: fixed;
     left: 0;
     top: 0;
     bottom: 0;
-    width: 200px; /* Adjust as needed */
-    background-color: #222; /* Dark background for the navigation */
+    width: 200px;
+    background-color: #222; /* Dark for easy visual separation from content */
 }
 
 nav ul {
@@ -51,18 +83,102 @@ nav a {
     text-decoration: none;
 }
 
+/* Main Content Styles */
 main {
-    padding-left:   300px;
-    padding-right:  300px;
-    padding-top:    50px;
-    display: grid; /* Use CSS Grid for layout */
-    grid-template-columns: repeat(4, 1fr); /* Create a 4-column grid */
-    gap: 20px; /* Add gap between cards */
+    padding-left: 300px;
+    padding-right: 300px;
+    padding-top: 50px;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
     flex-grow: 1;
     overflow-y: auto;
 }
 
+
+
+/* Pokémon Card Styles */
+.pokemon-card {
+    border: 3px solid #e2b63e; /* Gold to highlight individual cards */
+    border-radius: 10px; /* Slightly rounded corners for the cards */
+    padding: 10px;
+    width: 100%;
+    text-align: center;
+    background-color: #ffffff; /* White background to make the content pop */
+}
+
+.pokemon-card:hover {
+    background-color: #e8e8e8; /* Light grey for hover, adds a subtle interactive element */
+}
+
+.pokemon-card h2 {
+    margin-bottom: 10px;
+}
+
+.pokemon-card img {
+    max-width: 100%;
+    height: auto;
+}
+
+#hamburgerBtn {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    border: none;
+    background: none;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+#sidebar {
+    position: fixed;
+    left: -250px; /* Initially hidden */
+    top: 0;
+    bottom: 0;
+    width: 200px;
+    background-color: #222;
+    transition: left 0.3s;
+}
+
+#sidebar.visible {
+    left: 0; /* Slide in */
+}
+
+nav ul {
+    list-style-type: none;
+    padding: 20px;
+}
+
+nav li {
+    padding: 10px;
+}
+
+nav a {
+    color: #fff;
+    text-decoration: none;
+}
+
+main {
+    transition: padding-left 0.3s; /* Ensures smooth shifting */
+    padding-left: 0; /* Default state */
+}
+
+body.active main {
+    opacity: 0.5; /* Dim the main content when sidebar is open */
+}
+
+#sidebar.visible + main {
+    opacity: 1; /* Full visibility when sidebar is closed */
+}
+
+/* Footer Styles */
 footer {
     text-align: center;
     padding: 20px 0;
+}
+
+#hamburgerBtn:hover {
+    background-color: #add8e6; /* Light blue color */
+    color: #ffffff; /* Change text color to white on hover */
+    transition: background-color 0.3s ease; /* Smooth transition for color change */
 }

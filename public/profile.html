@@ -1,32 +1,48 @@
-<!-- public/profile.html -->
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <title>User Profile</title>
     <link rel="stylesheet" type="text/css" href="profile.css">
-
-    <main>
-        <div id="pokemonDisplay" class="pokemon-container"></div> <!-- Container for displaying Pokémon cards -->
-        <ul id="pokemon-list"></ul> <!-- List to display fetched Pokémon -->
-    </main>    
-
     <style>
         @media only screen and (max-width: 600px) {
             nav {
                 width: 100%;
-                /* Adjust as needed */
                 max-width: 500px;
-                /* Set a maximum width for the sidebar */
             }
-
-            main {
-                margin-left: 0;
-                /* Reset margin for main content */
+            main, header, footer {
+                margin-left: 0; /* Reset margin for main, header, and footer */
             }
         }
     </style>
+</head>
+<body>
+    <header>
+        <h1>Welcome to Your Profile</h1>
+        <button onclick="logout()">Log Out</button> <!-- Logout button -->
+        <button onclick="getPokemon()">Get Pokémon</button> <!-- Button to fetch Pokémon data -->
+    </header>
+
+    <button id="hamburgerBtn">&#9776; Menu</button> <!-- Hamburger icon -->
+        <nav id="sidebar" class="hidden">
+        <ul>
+            <li><a href="/pokedex"      id="pokedexLink"    >Pokédex</a></li>
+            <li><a href="/dailycatch"   id="dailyCatchLink" >Daily Catch</a></li>
+            <li><a href="/profile"      id="profileLink"    >Profile</a></li>
+            <li><a href="/settings"     id="settingsLink"   >Settings</a></li>
+            <li><a href="/logout"       id="logOutLink"     >Log Out</a></li>
+            <!-- Add more navigation links as needed -->
+        </ul>
+    </nav>
+
+    <main>
+        <div id="pokemonDisplay" class="pokemon-container"></div> <!-- Container for displaying Pokémon cards -->
+        <ul id="pokemon-list"></ul> <!-- List to display fetched Pokémon -->
+    </main>
+
+    <footer>
+        <!-- Footer content -->
+    </footer>
 
     <script>
         function logout() {
@@ -44,8 +60,6 @@
                 .then(data => {
                     const pokemonList = document.getElementById('pokemon-list');
                     pokemonList.innerHTML = ''; // Clear any existing content
-
-                    // Display Pokémon data
                     data.results.forEach(pokemon => {
                         const listItem = document.createElement('li');
                         listItem.textContent = pokemon.name;
@@ -53,87 +67,61 @@
                     });
                 });
         }
-    </script>
-</head>
 
-<body>
-    <header>
-        <h1>Welcome to Your Profile</h1>
-        <button onclick="logout()">Log Out</button> <!-- Logout button -->
-        <button onclick="getPokemon()">Get Pokémon</button> <!-- Button to fetch Pokémon data -->
-    </header>
-
-    <nav>
-        <ul>
-            <li><a href="/pokedex" id="pokedexLink">Pokédex</a></li>
-            <li><a href="/dailycatch" id="dailyCatchLink">Daily Catch</a></li>
-            <li><a href="/profile" id="profileLink">My Team</a></li>
-            <li><a href="/settings" id="settingsLink">Settings</a></li>
-            <li><a href="/logout" id="logOutLink">Log Out</a></li>
-            <!-- Add more navigation links as needed -->
-        </ul>
-    </nav>
-
-    <main>
-        <ul id="pokemon-list"></ul> <!-- List to display fetched Pokémon -->
-    </main>
-
-    <footer>
-        <!-- Footer content -->
-    </footer>
-</body>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        fetch('/my-team') // Calls the endpoint to get the user's Pokémon team
-            .then(response => response.json())
-            .then(team => {
-                if (team && Object.values(team).length) {
-                    displayTeam(team);
-                } else {
-                    console.log('No Pokémon team found or team is empty.');
-                }
-            })
-            .catch(error => console.error('Failed to load Pokémon team:', error));
-    });
-
-    async function displayTeam(team) {
-        const pokemonDisplay = document.getElementById("pokemonDisplay");
-        pokemonDisplay.innerHTML = ""; // Clear previous content
-
-        // Iterate through each Pokémon ID in the team and fetch their details
-        for (const key in team) {
-            const pokemonId = team[key];
-            if (pokemonId) { // Ensure there's a valid ID
-                try {
-                    const response = await fetch(`/pokemon/${pokemonId}`);
-                    if (!response.ok) {
-                        throw new Error(`Failed to fetch Pokémon with ID ${pokemonId}`);
+        document.addEventListener('DOMContentLoaded', function() {
+            fetch('/my-team') // Calls the endpoint to get the user's Pokémon team
+                .then(response => response.json())
+                .then(team => {
+                    if (team && Object.values(team).length) {
+                        displayTeam(team);
+                    } else {
+                        console.log('No Pokémon team found or team is empty.');
                     }
-                    const pokemon = await response.json();
+                })
+                .catch(error => console.error('Failed to load Pokémon team:', error));
+        });
 
-                    const capitalizedPokemonName = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
-                    const types = pokemon.types.map(type => type.type.name.charAt(0).toUpperCase() + type.type.name.slice(1)).join(", ");
-                    const stats = pokemon.stats.map(stat => `${stat.stat.name.charAt(0).toUpperCase() + stat.stat.name.slice(1)}: ${stat.base_stat}`).join(", ");
-                    const moves = pokemon.moves.map(move => move.move.name.charAt(0).toUpperCase() + move.move.name.slice(1)).slice(0, 5).join(", "); // Display first 5 moves
+        async function displayTeam(team) {
+    const pokemonDisplay = document.getElementById("pokemonDisplay");
+    pokemonDisplay.innerHTML = ""; // Clear previous content
 
-                    const pokemonCard = document.createElement("div");
-                    pokemonCard.classList.add("pokemon-card");
-                    pokemonCard.innerHTML = `
-                        <h2>${capitalizedPokemonName}</h2>
-                        <img src="${pokemon.sprites.front_default}" alt="${pokemon.name}">
-                        <p>Types: ${types}</p>
-                        <p>Stats: ${stats}</p>
-                        <p>Top Moves: ${moves}</p>
-                    `;
+    // Check if the team object is empty or undefined
+    if (!team || Object.keys(team).length === 0) {
+        pokemonDisplay.innerHTML = "<p>No Pokémon in your team yet.</p>";
+        return; // Exit the function early if no team data
+    }
 
-                    pokemonDisplay.appendChild(pokemonCard);
-                } catch (error) {
-                    console.error(`Error fetching Pokémon with ID ${pokemonId}:`, error);
-                    pokemonDisplay.innerHTML += `<p>Failed to fetch Pokémon with ID ${pokemonId}. Please try again.</p>`;
-                }
-            }
+    let anySuccessful = false; // Track if any fetch is successful
+
+    for (const key in team) {
+        const pokemonId = team[key];
+        try {
+            const response = await fetch(`/pokemon/${pokemonId}`);
+            if (!response.ok) throw new Error(`Failed to fetch Pokémon with ID ${pokemonId}`);
+            const pokemon = await response.json();
+
+            const pokemonCard = document.createElement("div");
+            pokemonCard.classList.add("pokemon-card");
+            pokemonCard.innerHTML = `
+                <h2>${pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}</h2>
+                <img src="${pokemon.sprites.front_default}" alt="${pokemon.name}">
+                <p>Types: ${pokemon.types.map(t => t.type.name.charAt(0).toUpperCase() + t.type.name.slice(1)).join(', ')}</p>
+                <p>Stats: ${pokemon.stats.map(s => s.stat.name.charAt(0).toUpperCase() + s.stat.name.slice(1) + ': ' + s.base_stat).join(', ')}</p>
+                <p>Top Moves: ${pokemon.moves.map(m => m.move.name.charAt(0).toUpperCase() + m.move.name.slice(1)).slice(0, 5).join(', ')}</p>
+            `;
+            pokemonDisplay.appendChild(pokemonCard);
+            anySuccessful = true; // Set to true if any Pokémon is successfully fetched
+        } catch (error) {
+            console.error(`Error fetching Pokémon with ID ${pokemonId}:`, error);
         }
     }
-</script>
 
+    // If no Pokémon were successfully fetched and displayed
+    if (!anySuccessful) {
+        pokemonDisplay.innerHTML = "<p>Failed to fetch team Pokémon. Please try again later.</p>";
+    }
+}
+
+    </script>
+</body>
 </html>
