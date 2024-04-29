@@ -109,7 +109,7 @@ document.getElementById('addPokemonButton').addEventListener('click', () => {
     popup.innerHTML = `
         <div style="background-color: rgba(0, 0, 0, 0.8); padding: 10px; border-radius: 5px; text-align: center;">
             <h2>Add Pokémon</h2>
-            <p>Pokemon Name: ${pokemonName}</p> <!-- Display the Pokémon name -->
+            <p>Pokémon Name: ${pokemonName}</p> <!-- Display the Pokémon name -->
             <label for="position">Position (1-6):</label>
             <input type="number" id="position" min="1" max="6">
             <button id="confirmAdd">Add</button>

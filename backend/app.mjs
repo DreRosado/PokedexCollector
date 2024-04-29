@@ -138,7 +138,11 @@ app.get('/settings', isAuthenticated, (req, res) => {
     res.sendFile('settings.html', { root: 'public' }); // Serve the Settings HTML file
 });
 
-app.get('/pokemon', isAuthenticated, (req, res) => {
+app.get('/pokemon-view', isAuthenticated, (req, res) => {
+    res.sendFile('pokemon.html', { root: 'public' }); // Serve the Pokémon HTML file
+});
+
+app.get('/pokemon-view/:idOrName', isAuthenticated, (req, res) => {
     res.sendFile('pokemon.html', { root: 'public' }); // Serve the Pokémon HTML file
 });
 
