@@ -7,7 +7,8 @@ document.getElementById("randomizeButton").addEventListener("click", async funct
 
     try {
         const randomIds = generateRandomPokemonIds(12); // Generate an array of 12 random Pokémon IDs
-        await fetchRandomPokemonData(randomIds);
+        // Wait for all fetch operations to complete using Promise.all
+        await Promise.all(randomIds.map(id => fetchAndDisplayPokemon(id)));
     } catch (err) {
         console.error("Error during Pokémon randomization", err);
     } finally {
@@ -24,41 +25,16 @@ function generateRandomPokemonIds(count) {
     return randomIds;
 }
 
-// Function to fetch data for random Pokémon IDs and display them
-async function fetchRandomPokemonData(ids) {
-    for (const id of ids) {
-        try {
-            const response = await fetch(`/pokemon/${id}`);
-            if (!response.ok) {
-                throw new Error(`Failed to fetch Pokémon with ID ${id}`);
-            }
-            const pokemon = await response.json();
-            displayPokemon(pokemon);
-        } catch (error) {
-            console.error("Error fetching Pokémon data:", error);
-        }
+// Function to fetch and display Pokémon details by name
+async function searchPokemon() {
+    const searchInput = document.getElementById("searchInput").value.trim().toLowerCase();
+    if (searchInput) {
+        await fetchAndDisplayPokemon(searchInput);
+    } else {
+        document.getElementById("pokemonDisplay").innerHTML = "<p>Please enter a Pokémon name.</p>";
     }
 }
 
-// Updated function to display Pokémon information with types
-function displayPokemon(pokemon) {
-    const display = document.getElementById("pokemonDisplay");
-    const capitalizedPokemonName = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
-
-    const types = pokemon.types.map((type) => {
-        return type.type.name.charAt(0).toUpperCase() + type.type.name.slice(1);
-    }).join(", ");
-
-    const pokemonCard = document.createElement("div");
-    pokemonCard.classList.add("pokemon-card");
-    pokemonCard.innerHTML = `
-        <h2>${capitalizedPokemonName}</h2>
-        <img src="${pokemon.sprites.front_default}" alt="${pokemon.name}">
-        <p>Types: ${types}</p> <!-- Displaying Pokémon's type(s) -->
-    `;
-
-    display.appendChild(pokemonCard);
-}
 // Fetch Pokémon names from your backend and populate the datalist
 fetch('/pokemon/?limit=1302') // 
     .then((response) => response.json())
@@ -72,26 +48,11 @@ fetch('/pokemon/?limit=1302') //
     })
     .catch((error) => console.error("Error fetching Pokémon list:", error));
 
-document.getElementById("searchButton").addEventListener("click", function () {
+document.getElementById("searchButton").addEventListener("click", async function () {
     const searchInput = document.getElementById("searchInput").value.trim();
 
     if (searchInput) {
-        fetch(`/pokemon/${searchInput.toLowerCase()}`)
-            .then((response) => response.json())
-            .then((pokemon) => {
-                const display = document.getElementById("pokemonDisplay");
-                const capitalizedPokemonName = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
-                const capitalizedAbilities = pokemon.abilities.map((ability) => ability.ability.name.charAt(0).toUpperCase() + ability.ability.name.slice(1)).join(", ");
-                display.innerHTML = `
-                <h2>${capitalizedPokemonName}</h2>
-                <img src="${pokemon.sprites.front_default}" alt="${pokemon.name}">
-                <p>Type: ${pokemon.types.map((type) => type.type.name.charAt(0).toUpperCase() + type.type.name.slice(1)).join(", ")}</p>
-            `;
-            })
-            .catch((error) => {
-                console.error("Error fetching Pokémon:", error);
-                document.getElementById("pokemonDisplay").innerHTML = "<p>Pokémon not found. Please try again.</p>";
-            });
+        await fetchAndDisplayPokemon(searchInput);
     } else {
         document.getElementById("pokemonDisplay").innerHTML = "<p>Please enter a Pokémon name.</p>";
     }
@@ -109,7 +70,7 @@ document.getElementById('addPokemonButton').addEventListener('click', () => {
     popup.innerHTML = `
         <div style="background-color: rgba(0, 0, 0, 0.8); padding: 10px; border-radius: 5px; text-align: center;">
             <h2>Add Pokémon</h2>
-            <p>Pokemon Name: ${pokemonName}</p> <!-- Display the Pokémon name -->
+            <p>Pokémon Name: ${pokemonName}</p> <!-- Display the Pokémon name -->
             <label for="position">Position (1-6):</label>
             <input type="number" id="position" min="1" max="6">
             <button id="confirmAdd">Add</button>
@@ -141,7 +102,6 @@ document.getElementById('addPokemonButton').addEventListener('click', () => {
         })
             .then(response => response.text())
             .then(data => {
-                alert(data); // Display the response
                 document.body.removeChild(popup); // Close the popup
             })
             .catch(error => {
@@ -155,3 +115,43 @@ document.getElementById('addPokemonButton').addEventListener('click', () => {
         document.body.removeChild(popup); // Close the popup
     });
 });
+
+async function fetchAndDisplayPokemon(pokemonIdentifier) {
+    const pokemonDisplay = document.getElementById("pokemonDisplay");
+    pokemonDisplay.innerHTML = ""; // Clear previous content
+
+    try {
+        const response = await fetch(`/pokemon/${pokemonIdentifier}`);
+        if (!response.ok) {
+            throw new Error(`Failed to fetch Pokémon with identifier ${pokemonIdentifier}`);
+        }
+        const pokemon = await response.json();
+
+        const capitalizedPokemonName = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
+        const types = pokemon.types.map(type => type.type.name.charAt(0).toUpperCase() + type.type.name.slice(1)).join(", ");
+        const stats = pokemon.stats.map(stat => `${stat.stat.name.charAt(0).toUpperCase() + stat.stat.name.slice(1)}: ${stat.base_stat}`).join(", ");
+        const moves = pokemon.moves.map(move => move.move.name.charAt(0).toUpperCase() + move.move.name.slice(1)).slice(0, 5).join(", "); // Display first 5 moves
+
+        const pokemonCard = document.createElement("div");
+        pokemonCard.classList.add("pokemon-card");
+        pokemonCard.innerHTML = `
+            <h2>${capitalizedPokemonName}</h2>
+            <img src="${pokemon.sprites.front_default}" alt="${pokemon.name}">
+            <p>Types: ${types}</p>
+            <p>Stats: ${stats}</p>
+            <p>Top Moves: ${moves}</p>
+        `;
+
+        pokemonDisplay.appendChild(pokemonCard);
+
+        // Event listener for the select button on the Pokémon card
+        pokemonCard.addEventListener('click', () => {
+            const searchInput = document.getElementById("searchInput");
+            searchInput.value = capitalizedPokemonName; // Set the name in the search input
+            fetchAndDisplayPokemon(searchInput.value); // Trigger the function again to refresh the display
+        });        
+    } catch (error) {
+        console.error("Error fetching Pokémon data:", error);
+        pokemonDisplay.innerHTML = "<p>Pokémon not found. Please try again.</p>";
+    }
+}

@@ -69,30 +69,27 @@ app.post('/signin', async (req, res) => {
     const { username, password } = req.body;
 
     if (!username || !password) {
-        return res.status(400).send("Username and password are required");
+        return res.status(400).json({ success: false, message: "Username and password are required" });
     }
 
     try {
-        // Retrieve the user from the database
         const user = await db.get('SELECT * FROM users WHERE username = ?', [username]);
 
         if (user) {
-            // Compare the entered password with the stored hashed password
             const passwordMatches = bcrypt.compareSync(password, user.password);
 
             if (passwordMatches) {
-                req.session.user = { id: user.id, username: user.username }; // Store user info in session
-                // return res.redirect('/profile');
-                return res.redirect('/pokedex');
+                req.session.user = { id: user.id, username: user.username };
+                return res.json({ success: true, message: 'Login successful' });
             } else {
-                return res.status(401).send('Invalid username or password');
+                return res.status(401).json({ success: false, message: 'Invalid username or password' });
             }
         } else {
-            return res.status(401).send('Invalid username or password');
+            return res.status(401).json({ success: false, message: 'Invalid username or password' });
         }
     } catch (error) {
-        console.error("Sign-in error:", error); // Log error for debugging
-        return res.status(500).send("Internal server error");
+        console.error("Sign-in error:", error);
+        return res.status(500).json({ success: false, message: "Internal server error" });
     }
 });
 
@@ -138,7 +135,11 @@ app.get('/settings', isAuthenticated, (req, res) => {
     res.sendFile('settings.html', { root: 'public' }); // Serve the Settings HTML file
 });
 
-app.get('/pokemon', isAuthenticated, (req, res) => {
+app.get('/pokemon-view', isAuthenticated, (req, res) => {
+    res.sendFile('pokemon.html', { root: 'public' }); // Serve the Pokémon HTML file
+});
+
+app.get('/pokemon-view/:idOrName', isAuthenticated, (req, res) => {
     res.sendFile('pokemon.html', { root: 'public' }); // Serve the Pokémon HTML file
 });
 
@@ -172,6 +173,21 @@ app.post('/add-pokemon', isAuthenticated, async (req, res) => {
     }
 });
 
+app.get('/my-team', isAuthenticated, async (req, res) => {
+    try {
+        const userId = req.session.user.id;
+        const user = await db.get('SELECT pok1, pok2, pok3, pok4, pok5, pok6 FROM users WHERE id = ?', [userId]);
+        if (user) {
+            res.json(user); // Send back the user's Pokémon IDs
+        } else {
+            res.status(404).send('User not found');
+        }
+    } catch (error) {
+        console.error('Error retrieving user team:', error);
+        res.status(500).send('Internal server error');
+    }
+});
+
 app.get('/pokemon', isAuthenticated, (req, res) => {
     const limit = req.query.limit || 151; // Default to 151 Pokémon
     const apiUrl = `https://pokeapi.co/api/v2/pokemon?limit=${limit}`;
@@ -188,12 +204,12 @@ app.get('/pokemon', isAuthenticated, (req, res) => {
 });
 
 app.get('/pokemon/:idOrName', isAuthenticated, async (req, res) => {
-    const idOrName = req.params.idOrName;
+    const idOrName = req.params.idOrName.toLowerCase();
     const apiUrl = `https://pokeapi.co/api/v2/pokemon/${idOrName}`;
 
     try {
         const response = await fetch(apiUrl);
-        
+
         if (response.ok) {
             const data = await response.json();
             res.json(data); // Return the fetched Pokémon data as JSON
