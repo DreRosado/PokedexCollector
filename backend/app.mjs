@@ -173,6 +173,21 @@ app.post('/add-pokemon', isAuthenticated, async (req, res) => {
     }
 });
 
+app.get('/my-team', isAuthenticated, async (req, res) => {
+    try {
+        const userId = req.session.user.id;
+        const user = await db.get('SELECT pok1, pok2, pok3, pok4, pok5, pok6 FROM users WHERE id = ?', [userId]);
+        if (user) {
+            res.json(user); // Send back the user's Pokémon IDs
+        } else {
+            res.status(404).send('User not found');
+        }
+    } catch (error) {
+        console.error('Error retrieving user team:', error);
+        res.status(500).send('Internal server error');
+    }
+});
+
 app.get('/pokemon', isAuthenticated, (req, res) => {
     const limit = req.query.limit || 151; // Default to 151 Pokémon
     const apiUrl = `https://pokeapi.co/api/v2/pokemon?limit=${limit}`;

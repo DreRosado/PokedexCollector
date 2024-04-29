@@ -29,7 +29,7 @@ function generateRandomPokemonIds(count) {
 async function searchPokemon() {
     const searchInput = document.getElementById("searchInput").value.trim().toLowerCase();
     if (searchInput) {
-        await fetchAndDisplayPokemon (searchInput);
+        await fetchAndDisplayPokemon(searchInput);
     } else {
         document.getElementById("pokemonDisplay").innerHTML = "<p>Please enter a Pokémon name.</p>";
     }
@@ -102,7 +102,6 @@ document.getElementById('addPokemonButton').addEventListener('click', () => {
         })
             .then(response => response.text())
             .then(data => {
-                alert(data); // Display the response
                 document.body.removeChild(popup); // Close the popup
             })
             .catch(error => {
@@ -141,17 +140,16 @@ async function fetchAndDisplayPokemon(pokemonIdentifier) {
             <p>Types: ${types}</p>
             <p>Stats: ${stats}</p>
             <p>Top Moves: ${moves}</p>
-            <button class="selectPokemonButton">Select</button>
         `;
 
         pokemonDisplay.appendChild(pokemonCard);
 
         // Event listener for the select button on the Pokémon card
-        pokemonCard.querySelector('.selectPokemonButton').addEventListener('click', () => {
+        pokemonCard.addEventListener('click', () => {
             const searchInput = document.getElementById("searchInput");
             searchInput.value = capitalizedPokemonName; // Set the name in the search input
             fetchAndDisplayPokemon(searchInput.value); // Trigger the function again to refresh the display
-        });
+        });        
     } catch (error) {
         console.error("Error fetching Pokémon data:", error);
         pokemonDisplay.innerHTML = "<p>Pokémon not found. Please try again.</p>";
