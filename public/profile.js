@@ -103,3 +103,67 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     }
 });
+
+document.addEventListener('DOMContentLoaded', () => {
+    const removeButton = document.getElementById('removePokemonButton');
+    console.log('Button found:', removeButton); // This should log the button element
+
+    removeButton.addEventListener('click', () => {
+        console.log('Button clicked'); // Check if this gets logged when clicking the button
+        showRemovePopup();
+    });
+});
+
+function showRemovePopup() {
+    const popup = document.createElement('div');
+    popup.innerHTML = `
+        <div style="background-color: rgba(0, 0, 0, 0.8); padding: 20px; border-radius: 5px; text-align: center; color: white;">
+            <h2>Remove Pokémon</h2>
+            <p>Enter the position (1-6) of the Pokémon to remove:</p>
+            <input type="number" id="pokemonPositionInput" min="1" max="6" placeholder="Enter position 1-6">
+            <button id="confirmRemoveButton">Confirm Removal</button>
+            <button onclick="this.parentNode.parentNode.removeChild(this.parentNode)">Cancel</button>
+        </div>
+    `;
+    popup.style.position = 'fixed';
+    popup.style.top = '50%';
+    popup.style.left = '50%';
+    popup.style.transform = 'translate(-50%, -50%)';
+    popup.style.zIndex = '1000';
+    document.body.appendChild(popup);
+
+    document.getElementById('confirmRemoveButton').addEventListener('click', () => removePokemon());
+}
+
+function removePokemon() {
+    const positionInput = document.getElementById('pokemonPositionInput');
+    if (!positionInput || !positionInput.value) {
+        alert("Please enter a valid position (1-6).");
+        return;
+    }
+
+    const position = positionInput.value.trim();
+    if (position < 1 || position > 6) {
+        alert("Position must be between 1 and 6.");
+        return;
+    }
+
+    fetch(`/remove-pokemon/${position}`, {
+        method: 'DELETE',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+    .then(response => {
+        if (response.ok) {
+            alert("Pokémon removed successfully.");
+            // Reload the page or update the UI as necessary
+        } else {
+            response.text().then(text => alert(text));  // Display the server's response message
+        }
+    })
+    .catch(error => {
+        console.error('Error removing Pokémon:', error);
+        alert("Error removing Pokémon.");
+    });    
+}

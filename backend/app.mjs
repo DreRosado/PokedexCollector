@@ -238,6 +238,24 @@ app.post('/update-settings', isAuthenticated, async (req, res) => {
     }
 });
 
+app.delete('/remove-pokemon/:position', isAuthenticated, async (req, res) => {
+    const position = req.params.position;
+    const userId = req.session.user.id;
+
+    if (position < 1 || position > 6) {
+        return res.status(400).send('Position must be between 1 and 6');
+    }
+
+    try {
+        await db.run(`UPDATE users SET pok${position} = NULL WHERE id = ?`, [userId]);
+        res.status(200).send(`Pokémon at position ${position} has been removed from your profile.`);
+    } catch (error) {
+        console.error('Error removing Pokémon:', error);
+        res.status(500).send('Internal server error');
+    }
+});
+
+
 // Start the server
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
