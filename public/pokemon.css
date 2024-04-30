@@ -73,6 +73,16 @@ footer {
     padding: 20px 0;
 }
 
+ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+li {
+    padding: 5px 0;
+    font-size: 16px;
+}
+
 .pokemon-card {
     border: 3px solid #e2b63e;
     border-radius: 5px;
@@ -93,11 +103,9 @@ footer {
 }
 
 .pokemon-info {
-    /* display: flex; */
-    align-items: center;
-    /* padding: 20px; */
-    /* width: 800px; */
-    /* margin-top: -150px; */
+    display: flex;
+    justify-content: center;
+    align-items: flex-start; /* Align image to the top of the div */
 }
 
 .pokemon-details {
@@ -106,5 +114,72 @@ footer {
 
 .pokemon-img {
     height: 500px;
-    margin-top: -50px;
+    object-fit: contain;  /* Ensure the images are scaled correctly */
+    margin-top: -10px;
+    margin-bottom: 0px;
+    max-height: 325px;
+    max-width: 175%; /* Ensures image does not overflow div */
+}
+
+.evolution-list {
+    display: flex;
+    justify-content: left;  /* Align items centrally */
+    flex-wrap: wrap;  /* Allow items to wrap */
+    padding: 10px;
+}
+
+.pokemon-evolution-item {
+    margin: 10px;
+    text-align: center;  /* Center the text and image */
+}
+
+.pokemon-evolution-image {
+    width: 100px;  /* Set a standard size for Pokémon images */
+    height: 100px;
+    object-fit: contain;  /* Ensure the images are scaled correctly */
+}
+
+.pokemon-evolution-name {
+    margin-top: 5px;
+    color: #fff;
+}
+
+.pokemon-evolution-item a {
+    color: white;          /* Set the font color to white */
+    text-decoration: none; /* Remove the underline from links */
+}
+
+.pokemon-evolution-item a:hover {
+    text-decoration: underline; /* Optionally add underline on hover for better user interaction */
+}
+
+.type-button {
+    display: inline-block;
+    padding: 5px 10px;
+    margin-right: 5px;
+    border-radius: 10px; /* Rounded corners for button look */
+    color: white; /* Text color */
+    font-weight: bold;
+}
+
+.evolutions-title {
+    margin-top: -195px;
+    margin-bottom: -20px;
+    text-align: left;
+}
+
+.pokemon-stats p, .pokemon-abilities {
+    margin: 15px 0;
+}
+
+.pokemon-types {
+    margin-bottom: 40px;
+}
+
+.pokemon-weight {
+    margin-bottom: 40px;
+}
+
+.pokemon-abilities {
+    margin-top: 40px;
 }
