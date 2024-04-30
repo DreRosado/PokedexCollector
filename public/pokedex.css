@@ -19,7 +19,6 @@ header, footer {
     transition: padding-left 0.3s ease;
 }
 
-
 /* Header Styles */
 header {
     text-align: center;
@@ -85,8 +84,8 @@ nav a {
 
 /* Main Content Styles */
 main {
-    padding-left: 300px;
-    padding-right: 300px;
+    margin-left: 200px;
+    margin-right: 200px;
     padding-top: 50px;
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -94,8 +93,6 @@ main {
     flex-grow: 1;
     overflow-y: auto;
 }
-
-
 
 /* Pokémon Card Styles */
 .pokemon-card {

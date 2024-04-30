@@ -35,9 +35,19 @@
         </ul>
     </nav>
 
-    <main>
-        <!-- This section will be updated -->
-    </main>
+<main>
+    <h2 id="gameMessage"></h2> <!-- Message display area -->
+    <img id="pokemonSprite" style="display:none;"> <!-- Pokémon sprite will be dynamically loaded -->
+    <div id="pokeballsContainer" style="display:none;">
+        <img class="pokeball" data-index="0">
+        <img class="pokeball" data-index="1">
+        <img class="pokeball" data-index="2">
+    </div>    
+    <div id="countdownTimer" style="display:none;"> <!-- Countdown timer display -->
+        <p>Next catch:</p>
+        <span id="timer"></span>
+    </div>
+</main>
 
     <footer>
         <!-- Footer content -->

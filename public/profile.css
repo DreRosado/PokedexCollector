@@ -23,7 +23,7 @@ header, footer {
 /* Header Styles */
 header {
     text-align: center;
-    padding: 1px 0;
+    padding: 15px 0;
     background-color: #ffcb05; /* Bright yellow for a playful, eye-catching header */
 }
 
