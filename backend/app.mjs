@@ -222,6 +222,22 @@ app.get('/pokemon/:idOrName', isAuthenticated, async (req, res) => {
     }
 });
 
+app.get('/get-settings', isAuthenticated, async (req, res) => {
+    const user = await db.get('SELECT username FROM users WHERE id = ?', [req.session.user.id]);
+    res.json({ username: user.username });
+});
+
+app.post('/update-settings', isAuthenticated, async (req, res) => {
+    const { username, password } = req.body;
+    const hashedPassword = bcrypt.hashSync(password, 10);
+    try {
+        await db.run('UPDATE users SET username = ?, password = ? WHERE id = ?', [username, hashedPassword, req.session.user.id]);
+        res.json({ success: true, message: 'Update successful' });
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+});
+
 // Start the server
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
