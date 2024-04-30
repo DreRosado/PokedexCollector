@@ -204,11 +204,11 @@ footer {
 
 .pokemon-evolution-name {
     margin-top: 5px;
-    color: #fff;
+    color: black;
 }
 
 .pokemon-evolution-item a {
-    color: white;          /* Set the font color to white */
+    color: black;          /* Set the font color to black */
     text-decoration: none; /* Remove the underline from links */
 }
 
