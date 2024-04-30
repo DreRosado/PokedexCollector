@@ -86,16 +86,15 @@ nav a {
 /* Main Content Styles */
 main {
     padding-left: 300px;
-    padding-right: 300px;
+    /* padding-right: 300px; */
     padding-top: 50px;
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-rows: repeat(3, 1fr);
     gap: 20px;
     flex-grow: 1;
     overflow-y: auto;
+    justify-content: center;
 }
-
-
 
 /* Pokémon Card Styles */
 .pokemon-card {
@@ -186,4 +185,53 @@ footer {
 .active-link {
     background-color: blue;
     color: white; /* Change text color to white for better visibility */
+}
+
+#pokeballsContainer {
+    display: flex;
+    justify-content: space-around;
+    margin-top: -10px;
+    /* gap: 0px; */
+}
+
+#gameMessage {
+    display: flex;
+    justify-content: space-around;
+    width: 700px;
+}
+
+.pokeball {
+    cursor: pointer;
+    transition: transform 0.3s ease;
+    height: 155px;
+    margin-left: 5px;
+    margin-right: 5px;
+    /* filter: grayscale(); */
+}
+
+.grayscale {
+    filter: grayscale(100%); /* Convert the image to grayscale */
+}
+
+.pokeball:hover {
+    transform: scale(1.1);
+}
+
+#countdownTimer p, #countdownTimer span {
+    text-align: center;
+    color: #333;
+}
+
+#pokemonSprite {
+    height: 500px;
+    object-fit: contain;  /* Ensure the images are scaled correctly */
+    /* margin-top: -140px; */
+    margin-top: -125px;
+
+    /* margin-bottom: -50px; */
+    /* max-height: 325px; */
+    /* max-height: 225px; */
+    max-height: 270px;
+    max-width: 175%; /* Ensures image does not overflow div */
+    justify-self: center;
 }
