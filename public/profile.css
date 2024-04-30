@@ -183,3 +183,8 @@ footer {
     text-align: center;
     padding: 20px 0;
 }
+
+.active-link {
+    background-color: blue;
+    color: white; /* Change text color to white for better visibility */
+}

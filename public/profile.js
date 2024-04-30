@@ -36,20 +36,24 @@ document.addEventListener('DOMContentLoaded', function () {
     });
 });
 
-document.addEventListener('DOMContentLoaded', function () {
-    const sidebar = document.getElementById('sidebar');
-    const navLinks = document.querySelectorAll('nav a'); // Select all navigation links
+document.addEventListener('DOMContentLoaded', function() {
+    const navLinks = document.querySelectorAll('nav a');
+    const currentUrl = window.location.pathname; // Get the current URL path
 
-    // Add event listeners for nav links to close sidebar
     navLinks.forEach(link => {
-        link.addEventListener('click', function () {
+        if (link.getAttribute('href') === currentUrl) {
+            link.classList.add('active-link'); // Add 'active-link' class to the matching link
+        }
+        link.addEventListener('click', function() {
             sidebar.classList.remove('visible'); // Hide the sidebar
+            // Optionally, reset padding if you have padding adjustments
             const contentElements = document.querySelectorAll("main, header, footer");
             contentElements.forEach(element => {
                 element.style.paddingLeft = "0"; // Reset padding
             });
         });
     });
+
 
     // Fetch and display the Pokémon team
     fetch('/my-team')

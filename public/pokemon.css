@@ -246,3 +246,8 @@ footer {
 .pokemon-abilities {
     margin-top: 40px;
 }
+
+.active-link {
+    background-color: blue;
+    color: white; /* Change text color to white for better visibility */
+}

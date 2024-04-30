@@ -146,10 +146,13 @@ document.addEventListener("click", function(event) {
 });
 
 document.addEventListener('DOMContentLoaded', function() {
-    const sidebar = document.getElementById('sidebar');
-    const navLinks = document.querySelectorAll('nav a'); // Select all navigation links
+    const navLinks = document.querySelectorAll('nav a');
+    const currentUrl = window.location.pathname; // Get the current URL path
 
     navLinks.forEach(link => {
+        if (link.getAttribute('href') === currentUrl) {
+            link.classList.add('active-link'); // Add 'active-link' class to the matching link
+        }
         link.addEventListener('click', function() {
             sidebar.classList.remove('visible'); // Hide the sidebar
             // Optionally, reset padding if you have padding adjustments

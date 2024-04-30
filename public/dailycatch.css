@@ -182,3 +182,8 @@ footer {
     color: #ffffff; /* Change text color to white on hover */
     transition: background-color 0.3s ease; /* Smooth transition for color change */
 }
+
+.active-link {
+    background-color: blue;
+    color: white; /* Change text color to white for better visibility */
+}
