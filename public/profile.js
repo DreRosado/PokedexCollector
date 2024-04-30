@@ -99,7 +99,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         // If no Pokémon were successfully fetched and displayed
         if (!anySuccessful) {
-            pokemonDisplay.innerHTML = "<p>Failed to fetch team Pokémon. Please try again later.</p>";
+            pokemonDisplay.innerHTML = "<p>No Pokemon Yet</p>";
         }
     }
 });
