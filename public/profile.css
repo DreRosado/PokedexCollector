@@ -195,3 +195,10 @@ footer {
     color: white; /* Change text color to white for better visibility */
 }
 
+.pokemon-card.empty {
+    background-color: #f4f4f4;
+    border: 2px dashed #ccc;
+    text-align: center;
+    padding: 20px;
+    color: #666;
+}

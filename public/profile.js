@@ -67,41 +67,53 @@ document.addEventListener('DOMContentLoaded', function() {
         })
         .catch(error => console.error('Failed to load Pokémon team:', error));
 
-    // Function to display each Pokémon in the team
-    async function displayTeam(team) {
-        const pokemonDisplay = document.getElementById("pokemonDisplay");
-        pokemonDisplay.innerHTML = ""; // Clear previous content
+// Function to display each Pokémon in the team
+async function displayTeam(team) {
+    const pokemonDisplay = document.getElementById("pokemonDisplay");
+    pokemonDisplay.innerHTML = ""; // Clear previous content
 
-        let anySuccessful = false; // Track if any fetch is successful
+    for (let position = 1; position <= 6; position++) {
+        const pokemonId = team[`pok${position}`];
 
-        for (const key in team) {
-            const pokemonId = team[key];
-            try {
-                const response = await fetch(`/pokemon/${pokemonId}`);
-                if (!response.ok) throw new Error(`Failed to fetch Pokémon with ID ${pokemonId}`);
-                const pokemon = await response.json();
-
-                const pokemonCard = document.createElement("div");
-                pokemonCard.classList.add("pokemon-card");
-                pokemonCard.innerHTML = `
-                    <h2>${pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)}</h2>
-                    <img src="${pokemon.sprites.front_default}" alt="${pokemon.name}">
-                    <p>Types: ${pokemon.types.map(t => t.type.name.charAt(0).toUpperCase() + t.type.name.slice(1)).join(', ')}</p>
-                    <p>Stats: ${pokemon.stats.map(s => s.stat.name.charAt(0).toUpperCase() + s.stat.name.slice(1) + ': ' + s.base_stat).join(', ')}</p>
-                    <p>Top Moves: ${pokemon.moves.map(m => m.move.name.charAt(0).toUpperCase() + m.move.name.slice(1)).slice(0, 5).join(', ')}</p>
-                `;
-                pokemonDisplay.appendChild(pokemonCard);
-                anySuccessful = true; // Set to true if any Pokémon is successfully fetched
-            } catch (error) {
-                console.error(`Error fetching Pokémon with ID ${pokemonId}:`, error);
-            }
-        }
-
-        // If no Pokémon were successfully fetched and displayed
-        if (!anySuccessful) {
-            pokemonDisplay.innerHTML = "<p>No Pokemon Yet</p>";
+        if (pokemonId) {
+            fetch(`/pokemon/${pokemonId}`)
+                .then(response => {
+                    if (!response.ok) throw new Error(`Failed to fetch Pokémon with ID ${pokemonId}`);
+                    return response.json();
+                })
+                .then(pokemon => {
+                    const pokemonCard = createPokemonCard(pokemon, position);
+                    pokemonDisplay.appendChild(pokemonCard);
+                })
+                .catch(error => {
+                    console.error(`Error fetching Pokémon with ID ${pokemonId}:`, error);
+                    pokemonDisplay.appendChild(createEmptyCard(position, "Failed to load"));
+                });
+        } else {
+            pokemonDisplay.appendChild(createEmptyCard(position, "Empty Slot"));
         }
     }
+}
+
+function createPokemonCard(pokemon, position) {
+    const pokemonCard = document.createElement("div");
+    pokemonCard.classList.add("pokemon-card");
+    pokemonCard.innerHTML = `
+        <h2>${pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1)} - Slot Position ${position}</h2>
+        <img src="${pokemon.sprites.front_default}" alt="${pokemon.name}">
+        <p>Types: ${pokemon.types.map(t => t.type.name.charAt(0).toUpperCase() + t.type.name.slice(1)).join(', ')}</p>
+        <p>Stats: ${pokemon.stats.map(s => s.stat.name.charAt(0).toUpperCase() + s.stat.name.slice(1) + ': ' + s.base_stat).join(', ')}</p>
+        <p>Top Moves: ${pokemon.moves.map(m => m.move.name.charAt(0).toUpperCase() + m.move.name.slice(1)).slice(0, 5).join(', ')}</p>
+    `;
+    return pokemonCard;
+}
+
+function createEmptyCard(position, message) {
+    const emptyCard = document.createElement("div");
+    emptyCard.classList.add("pokemon-card", "empty");
+    emptyCard.innerHTML = `<p>${message} - Position ${position}</p>`;
+    return emptyCard;
+}
 });
 
 document.addEventListener('DOMContentLoaded', () => {
