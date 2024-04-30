@@ -39,4 +39,35 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
+document.getElementById('updateForm').addEventListener('submit', async function(event) {
+    event.preventDefault();
+    const username = document.getElementById('username').value;
+    const password = document.getElementById('password').value;
 
+    const response = await fetch('/update-settings', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ username, password })
+    });
+
+    const result = await response.json();
+    if (response.ok) {
+        alert('Update successful!');
+    } else {
+        alert(`Failed to update: ${result.message}`);
+    }
+});
+
+window.onload = async () => {
+    const response = await fetch('/get-settings');
+    const data = await response.json();
+
+    if (response.ok) {
+        document.getElementById('username').value = data.username;
+        document.getElementById('password').placeholder = 'Enter new password';
+    } else {
+        console.error(data.message);
+    }
+};

@@ -187,3 +187,43 @@ footer {
     background-color: blue;
     color: white; /* Change text color to white for better visibility */
 }
+
+/* Main Content Styles */
+main {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Use full view height for vertical alignment */
+    padding: 20px;
+    background-color: #f4f4f9; /* Light grey background for the main area */
+}
+
+/* Form Styling */
+form {
+    background-color: white; /* White background for the form */
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Subtle shadow for 3D effect */
+    width: 100%;
+    max-width: 400px; /* Maximum width of the form */
+}
+
+input[type="text"],
+input[type="password"] {
+    width: 100%; /* Full width of the form */
+    padding: 10px;
+    margin-top: 8px;
+    margin-bottom: 20px; /* Spacing below each input */
+    border: 1px solid #ccc; /* Light grey border */
+    border-radius: 5px; /* Rounded corners for the input fields */
+}
+
+label {
+    font-size: 16px; /* Slightly larger font size for labels */
+    color: #333; /* Dark grey color for text */
+    display: block; /* Make labels block to ensure inputs appear below labels */
+}
+
+button:hover {
+    background-color: #2929a3; /* Darker blue on hover for interactivity */
+}
