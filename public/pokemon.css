@@ -60,9 +60,9 @@ nav a {
 main {
     padding-left:   300px;
     padding-right:  300px;
-    padding-top:    50px;
+    padding-top:    15px;
     display: grid; /* Use CSS Grid for layout */
-    grid-template-columns: repeat(4, 1fr); /* Create a 4-column grid */
+    grid-template-columns: repeat(2, 1fr); /* Create a 2-column grid */
     gap: 20px; /* Add gap between cards */
     flex-grow: 1;
     overflow-y: auto;
@@ -90,4 +90,21 @@ footer {
 .pokemon-card img {
     max-width: 100%;
     height: auto;
+}
+
+.pokemon-info {
+    /* display: flex; */
+    align-items: center;
+    /* padding: 20px; */
+    /* width: 800px; */
+    /* margin-top: -150px; */
+}
+
+.pokemon-details {
+    margin-left: 20px;
+}
+
+.pokemon-img {
+    height: 500px;
+    margin-top: -50px;
 }

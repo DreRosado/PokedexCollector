@@ -52,7 +52,8 @@ document.getElementById("searchButton").addEventListener("click", async function
     const searchInput = document.getElementById("searchInput").value.trim();
 
     if (searchInput) {
-        await fetchAndDisplayPokemon(searchInput);
+        // await fetchAndDisplayPokemon(searchInput);
+        window.location.href = `/pokemon-view/${searchInput}`;  // Navigate to the Pokémon page with the ID or name
     } else {
         document.getElementById("pokemonDisplay").innerHTML = "<p>Please enter a Pokémon name.</p>";
     }
@@ -148,7 +149,8 @@ async function fetchAndDisplayPokemon(pokemonIdentifier) {
         pokemonCard.addEventListener('click', () => {
             const searchInput = document.getElementById("searchInput");
             searchInput.value = capitalizedPokemonName; // Set the name in the search input
-            fetchAndDisplayPokemon(searchInput.value); // Trigger the function again to refresh the display
+            // fetchAndDisplayPokemon(searchInput.value); // Trigger the function again to refresh the display
+            window.location.href = `/pokemon-view/${searchInput.value}`;  // Navigate to the Pokémon page with the ID or name
         });        
     } catch (error) {
         console.error("Error fetching Pokémon data:", error);

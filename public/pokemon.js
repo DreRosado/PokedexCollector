@@ -1,3 +1,36 @@
+window.onload = function () {
+    const pokemonIdOrName = window.location.pathname.split("/").pop(); // Extracts the ID or name from the URL
+    fetchAndDisplayPokemon(pokemonIdOrName);
+};
+
+async function fetchAndDisplayPokemon(pokemonIdOrName) {
+    try {
+        const response = await fetch(`/pokemon/${pokemonIdOrName}`);
+        if (!response.ok) {
+            throw new Error('Failed to fetch Pokémon data');
+        }
+        const pokemon = await response.json();
+        displayPokemonData(pokemon);
+    } catch (error) {
+        console.log(222);
+        console.error("Error fetching Pokémon data:", error);
+        document.querySelector('main').innerHTML = "<p>Failed to load Pokémon data. Please try again.</p>";
+    }
+}
+
+function displayPokemonData(pokemon) {
+    const main = document.querySelector('main');
+    main.innerHTML = `
+        <div class="pokemon-info">
+            <img src="${pokemon.sprites.front_default}" alt="Sprite of ${pokemon.name}" class="pokemon-img">
+        </div>
+        <div class="pokemon-details">
+            <h1>${pokemon.name.toUpperCase()}</h1>
+            <p>Types: ${pokemon.types.map(type => type.type.name.charAt(0).toUpperCase() + type.type.name.slice(1)).join(", ")}</p>
+        </div>
+    `;
+}
+
 document.getElementById("hamburgerBtn").addEventListener("click", function(event) {
     var sidebar = document.getElementById("sidebar");
     sidebar.classList.toggle("visible");
