@@ -24,4 +24,4 @@ Running the Application
 The application is set up to run on a local server at port 3000.
 Users need to navigate to http://localhost:3000 to access the application and start interacting with the features.
 
-video link: https://youtu.be/A4kBUdfHSTY
+Youtube Link Video: https://youtu.be/A4kBUdfHSTY
