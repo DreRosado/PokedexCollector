@@ -84,10 +84,13 @@ document.addEventListener('DOMContentLoaded', function () {
         document.querySelectorAll('.pokeball').forEach((pokeball, index) => {
             pokeball.onclick = function () {
                 // Disable the onclick handlers for all pokeballs after one is clicked
-                document.querySelectorAll('.pokeball').forEach((otherPokeball) => {
+                document.querySelectorAll('.pokeball').forEach((otherPokeball, otherIndex) => {
                     otherPokeball.onclick = null;  // Set onclick to null to disable further clicks
+                    if (otherIndex !== index) {
+                        otherPokeball.classList.add('grayscale'); // Apply grayscale filter to other Pokéballs
+                    }
                 });
-        
+                
                 if (index === correctPokeball) {
                     document.getElementById('gameMessage').innerHTML = `You've caught ${pokemonName}!`;
                     showAddToTeamOptions(pokemonId, pokemonName);
@@ -95,12 +98,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 } else {
                     document.getElementById('gameMessage').innerHTML = message;
                     document.getElementById('pokemonSprite').src = picPath;
-                }
-        
-                // Apply grayscale filter to all Pokéballs to visually indicate they are disabled
-                document.querySelectorAll('.pokeball').forEach((otherPokeball) => {
-                    otherPokeball.classList.add('grayscale');
-                });
+                }        
             };
         });
     }
