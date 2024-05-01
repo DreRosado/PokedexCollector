@@ -36,14 +36,20 @@
     </nav>
 
     <main>
+        <div id="userDetails">
+            <h2>Settings</h2>
+            <p><strong>Username:</strong> <span id="usernameDisplay"></span></p>
+            <p><strong>Email:</strong> <span id="emailDisplay">Loading email...</span></p>
+        </div>
         <form id="updateForm">
-            <label for="username">Username:</label>
-            <input type="text" id="username" required>
-            <label for="password">Password:</label>
-            <input type="password" id="password" required>
-            <button type="submit">Update</button>
+            <label for="email">Update Email:</label>
+            <input type="email" id="email" name="email" placeholder="Enter or update your email">
+    
+            <button type="submit">Update Email</button>
         </form>
     </main>
+    
+    
 
     <footer>
         <!-- Footer content -->

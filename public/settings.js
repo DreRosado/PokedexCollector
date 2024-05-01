@@ -39,35 +39,41 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 });
 
-document.getElementById('updateForm').addEventListener('submit', async function(event) {
-    event.preventDefault();
-    const username = document.getElementById('username').value;
-    const password = document.getElementById('password').value;
+document.addEventListener('DOMContentLoaded', async () => {
+    try {
+        const response = await fetch('/get-settings');
+        const data = await response.json();
 
-    const response = await fetch('/update-settings', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({ username, password })
+        if (response.ok) {
+            // Display username and email in text elements
+            document.getElementById('usernameDisplay').textContent = data.username;
+            document.getElementById('emailDisplay').textContent = data.email || 'No email set'; // Display 'No email set' if null
+            document.getElementById('email').value = data.email || ''; // Set value in the form for updating
+        } else {
+            console.error('Failed to fetch settings:', data.message);
+        }
+    } catch (error) {
+        console.error('Error loading settings:', error);
+    }
+
+    document.getElementById('updateForm').addEventListener('submit', async function(event) {
+        event.preventDefault();
+        const email = document.getElementById('email').value;
+
+        const response = await fetch('/update-email', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ email })
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+            document.getElementById('emailDisplay').textContent = email; // Update display after successful update
+            alert('Email updated successfully!');
+        } else {
+            alert(`Failed to update email: ${result.message}`);
+        }
     });
-
-    const result = await response.json();
-    if (response.ok) {
-        alert('Update successful!');
-    } else {
-        alert(`Failed to update: ${result.message}`);
-    }
 });
-
-window.onload = async () => {
-    const response = await fetch('/get-settings');
-    const data = await response.json();
-
-    if (response.ok) {
-        document.getElementById('username').value = data.username;
-        document.getElementById('password').placeholder = 'Enter new password';
-    } else {
-        console.error(data.message);
-    }
-};

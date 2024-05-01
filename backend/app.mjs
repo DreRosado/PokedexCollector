@@ -39,6 +39,15 @@ await db.run(`
     )
 `);
 
+await db.run(`
+    CREATE TABLE IF NOT EXISTS emails (
+        id INTEGER PRIMARY KEY,
+        email TEXT UNIQUE,
+        username TEXT,
+        FOREIGN KEY(username) REFERENCES users(username) ON DELETE CASCADE
+    )
+`);
+
 function isAuthenticated(req, res, next) {
     if (req.session.user) {
         next(); // User is authenticated, proceed to the next step
@@ -223,18 +232,19 @@ app.get('/pokemon/:idOrName', isAuthenticated, async (req, res) => {
 });
 
 app.get('/get-settings', isAuthenticated, async (req, res) => {
-    const user = await db.get('SELECT username FROM users WHERE id = ?', [req.session.user.id]);
-    res.json({ username: user.username });
-});
-
-app.post('/update-settings', isAuthenticated, async (req, res) => {
-    const { username, password } = req.body;
-    const hashedPassword = bcrypt.hashSync(password, 10);
     try {
-        await db.run('UPDATE users SET username = ?, password = ? WHERE id = ?', [username, hashedPassword, req.session.user.id]);
-        res.json({ success: true, message: 'Update successful' });
+        const userId = req.session.user.id;
+        const userDetails = await db.get('SELECT username FROM users WHERE id = ?', [userId]);
+        const emailDetails = await db.get('SELECT email FROM emails WHERE username = ?', [userDetails.username]);
+
+        if (userDetails) {
+            res.json({ username: userDetails.username, email: emailDetails ? emailDetails.email : 'No email provided' });
+        } else {
+            res.status(404).send('User not found');
+        }
     } catch (error) {
-        res.status(500).json({ success: false, message: 'Internal server error' });
+        console.error('Error retrieving user settings:', error);
+        res.status(500).send('Internal server error');
     }
 });
 
@@ -255,6 +265,33 @@ app.delete('/remove-pokemon/:position', isAuthenticated, async (req, res) => {
     }
 });
 
+app.post('/update-email', isAuthenticated, async (req, res) => {
+    const { email } = req.body;  // Only email is received from the client
+    const username = req.session.user.username;  // Retrieve username from session
+
+    try {
+        // Ensure the user exists
+        const user = await db.get('SELECT * FROM users WHERE username = ?', [username]);
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User not found' });
+        }
+
+        // Check if the email entry already exists for the user
+        const existingEmail = await db.get('SELECT * FROM emails WHERE username = ?', [username]);
+        if (existingEmail) {
+            // Update the existing email
+            await db.run('UPDATE emails SET email = ? WHERE username = ?', [email, username]);
+        } else {
+            // Insert a new email record
+            await db.run('INSERT INTO emails (email, username) VALUES (?, ?)', [email, username]);
+        }
+
+        res.status(200).json({ success: true, message: 'Email updated successfully' });
+    } catch (error) {
+        console.error('Error updating email:', error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+});
 
 // Start the server
 app.listen(port, () => {
