@@ -168,8 +168,12 @@ function removePokemon() {
     })
     .then(response => {
         if (response.ok) {
-            alert("Pokémon removed successfully.");
-            // Reload the page or update the UI as necessary
+            // Hide the popup
+            const popup = document.querySelector('div[style*="position: fixed"]');
+            if (popup) {
+                document.body.removeChild(popup);
+            }
+            // Optionally, reload the page or update the UI as necessary
         } else {
             response.text().then(text => alert(text));  // Display the server's response message
         }
@@ -178,4 +182,10 @@ function removePokemon() {
         console.error('Error removing Pokémon:', error);
         alert("Error removing Pokémon.");
     });    
+}
+window.onload = function() {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get('playedToday') === 'true') {
+        alert('You have already played today. Come back tomorrow!');
+    }
 }
