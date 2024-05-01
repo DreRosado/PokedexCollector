@@ -174,6 +174,7 @@ function removePokemon() {
                 document.body.removeChild(popup);
             }
             // Optionally, reload the page or update the UI as necessary
+            window.location.reload();
         } else {
             response.text().then(text => alert(text));  // Display the server's response message
         }
