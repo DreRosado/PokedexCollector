@@ -173,6 +173,20 @@ app.post('/add-pokemon', isAuthenticated, async (req, res) => {
     }
 });
 
+app.post('/add-pokemon/:slot/:pokemonId', isAuthenticated, async (req, res) => {
+    const { slot, pokemonId } = req.params;
+    const userId = req.session.user.id;
+    await db.run(`UPDATE users SET pok${slot} = ? WHERE id = ?`, [pokemonId, userId]);
+    res.send('Pokémon added successfully.');
+});
+
+app.post('/replace-pokemon/:slot/:pokemonId', isAuthenticated, async (req, res) => {
+    const { slot, pokemonId } = req.params;
+    const userId = req.session.user.id;
+    await db.run(`UPDATE users SET pok${slot} = ? WHERE id = ?`, [pokemonId, userId]);
+    res.send('Pokémon replaced successfully.');
+});
+
 app.get('/my-team', isAuthenticated, async (req, res) => {
     try {
         const userId = req.session.user.id;

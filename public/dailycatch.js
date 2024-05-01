@@ -46,11 +46,12 @@ document.addEventListener('DOMContentLoaded', function() {
         fetch('https://pokeapi.co/api/v2/pokemon/' + Math.floor(Math.random() * 898 + 1)) // Random Pokémon ID
             .then(response => response.json())
             .then(pokemon => {
+                const pokemonName = pokemon.name.charAt(0).toUpperCase() + pokemon.name.slice(1);
                 document.getElementById('pokemonSprite').src = pokemon.sprites.front_default;
                 document.getElementById('pokemonSprite').style.display = 'block';
-                document.getElementById('gameMessage').innerHTML = `A wild ${pokemon.name} appeared! Find ${pokemon.name} to catch it.`;
+                document.getElementById('gameMessage').innerHTML = `A wild ${pokemonName} appeared! Find ${pokemonName} to catch it.`;
                 document.getElementById('pokeballsContainer').style.display = 'flex';
-                setupPokeballs(pokemon.name);
+                setupPokeballs(pokemonName, pokemon.id);
             });
     }
 
@@ -66,7 +67,7 @@ document.addEventListener('DOMContentLoaded', function() {
             .catch(error => console.error('Failed to fetch Pokéball sprite:', error));
     }    
 
-    function setupPokeballs(pokemonName) {
+    function setupPokeballs(pokemonName, pokemonId) {
         const correctPokeball = Math.floor(Math.random() * 3); // Randomly select a winning pokeball
         const trashPic = Math.floor(Math.random() * 2); // Randomly select whether incorrect choice is trash or soggy boots
         let message, picPath;
@@ -90,6 +91,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
                 if (index === correctPokeball) {
                     document.getElementById('gameMessage').innerHTML = `You've caught ${pokemonName}!`;
+                    showAddToTeamOptions(pokemonId, pokemonName);
                     document.getElementById('pokemonSprite').src = pokemon.sprites.front_default;
                 } else {
                     document.getElementById('gameMessage').innerHTML = message;
@@ -98,6 +100,63 @@ document.addEventListener('DOMContentLoaded', function() {
             };
         });
     }
+
+    function showAddToTeamOptions(pokemonId, pokemonName) {
+        const container = document.createElement('div');
+        container.id = 'teamOptions';  // Give an ID for easier CSS targeting
+    
+        const addButton = document.createElement('button');
+        addButton.id = 'addButton';
+        addButton.innerText = 'Add to Team';
+        addButton.onclick = () => addToTeam(pokemonId, pokemonName);
+    
+        const cancelButton = document.createElement('button');
+        cancelButton.id = 'cancelButton';
+        cancelButton.innerText = 'Cancel';
+        cancelButton.onclick = () => location.reload(); // Reset the game
+    
+        container.appendChild(addButton);
+        container.appendChild(cancelButton);
+    
+        // Ensure the container is being added to the main element or a specific part of the page.
+        document.querySelector('main').appendChild(container); // Make sure this selector is correct
+    }
+    
+    function addToTeam(pokemonId, pokemonName) {
+        fetch('/my-team').then(res => res.json()).then(team => {
+            const emptySlot = Object.keys(team).find(key => !team[key]);
+            if (emptySlot) {
+                fetch(`/add-pokemon/${emptySlot}/${pokemonName}`, { method: 'POST' }).then(() => {
+                    alert(`${pokemonName} added to your team!`);
+                    location.reload();
+                });
+            } else {
+                showFullTeamOptions(pokemonId, pokemonName); // Handle full team scenario
+            }
+        });
+    }
+    
+    function showFullTeamOptions(pokemonId, pokemonName) {
+        const popup = document.createElement('div');
+        popup.innerHTML = `
+            <p>Your team is full. Enter the position (1-6) where you want to place ${pokemonName}:</p>
+            <input type="number" id="teamPosition" min="1" max="6">
+            <button onclick="replacePokemon(${pokemonId}, document.getElementById('teamPosition').value, '${pokemonName}')">Replace</button>
+            <button onclick="this.parentNode.remove()">Cancel</button>
+        `;
+        document.body.appendChild(popup);
+    }
+    
+    function replacePokemon(pokemonId, position, pokemonName) {
+        if (position < 1 || position > 6) {
+            alert('Invalid position.');
+            return;
+        }
+        fetch(`/replace-pokemon/${position}/${pokemonId}`, { method: 'POST' }).then(() => {
+            alert(`Pokémon replaced with ${pokemonName} in position ${position}.`);
+            location.reload();
+        });
+    }    
 
     function showTimer() {
         const interval = setInterval(function() {
