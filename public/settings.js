@@ -77,3 +77,23 @@ document.addEventListener('DOMContentLoaded', async () => {
         }
     });
 });
+document.getElementById('deleteAccountForm').addEventListener('submit', async function(event) {
+    event.preventDefault(); // Prevent the default form submission behavior
+
+    if (confirm("Are you sure you want to delete your account? This action cannot be undone.")) {
+        const response = await fetch('/delete-account', {
+            method: 'DELETE',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+            alert('Account deleted successfully!');
+            window.location.href = '/signin'; // Redirect to sign-in page after account deletion
+        } else {
+            alert(`Failed to delete account: ${result.message}`);
+        }
+    }
+});

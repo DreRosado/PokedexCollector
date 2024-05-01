@@ -309,6 +309,18 @@ app.post('/update-email', isAuthenticated, async (req, res) => {
         res.status(500).json({ success: false, message: 'Internal server error' });
     }
 });
+app.delete('/delete-account', isAuthenticated, async (req, res) => {
+    const userId = req.session.user.id;
+
+    try {
+        await db.run('DELETE FROM users WHERE id = ?', [userId]);
+        req.session.destroy(); // End the user session
+        res.json({ success: true, message: 'Account deleted successfully' });
+    } catch (error) {
+        console.error('Error deleting account:', error);
+        res.status(500).json({ success: false, message: 'Internal server error' });
+    }
+});
 
 // Start the server
 app.listen(port, () => {
