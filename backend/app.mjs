@@ -35,7 +35,8 @@ await db.run(`
         pok3 INTEGER, 
         pok4 INTEGER, 
         pok5 INTEGER, 
-        pok6 INTEGER
+        pok6 INTEGER,
+        last_played DATE
     )
 `);
 
@@ -132,8 +133,24 @@ app.get('/pokedex', isAuthenticated, (req, res) => {
     res.sendFile('pokedex.html', { root: 'public' }); // Serve the Pokédex HTML file
 });
 
-app.get('/dailycatch', isAuthenticated, (req, res) => {
-    res.sendFile('dailycatch.html', { root: 'public' }); // Serve the Daily Catch HTML file
+app.get('/dailycatch', isAuthenticated, async (req, res) => {
+    try {
+        const userId = req.session.user.id;
+        const user = await db.get('SELECT last_played FROM users WHERE id = ?', [userId]);
+
+        const today = new Date().toISOString().split('T')[0];  // Get today's date in YYYY-MM-DD format
+        if (user.last_played === today) {
+            // Option 1: Redirect the user to another page, such as the profile page or home page
+            res.redirect('/profile?playedToday=true');  // Redirect to a different page
+        } else {
+            // Update the last_played date to today
+            await db.run('UPDATE users SET last_played = ? WHERE id = ?', [today, userId]);
+            res.sendFile('dailycatch.html', { root: 'public' }); // Serve the Daily Catch HTML file
+        }
+    } catch (error) {
+        console.error('Error accessing Daily Catch:', error);
+        res.status(500).send('Internal server error');
+    }
 });
 
 app.get('/profile', isAuthenticated, (req, res) => {
@@ -297,4 +314,3 @@ app.post('/update-email', isAuthenticated, async (req, res) => {
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}`);
 });
-

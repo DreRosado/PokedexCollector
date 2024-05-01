@@ -53,6 +53,9 @@ button {
     cursor: pointer;
     margin-left: 10px;
     border-radius: 20px; /* Fully rounded edges for a modern, friendly button */
+    /* margin: 0 10px; */
+    /* border: 1px solid #ccc; */
+    /* cursor: pointer; */
 }
 
 button:hover {
@@ -89,8 +92,9 @@ main {
     /* padding-right: 300px; */
     padding-top: 50px;
     display: grid;
-    grid-template-rows: repeat(3, 1fr);
+    grid-template-rows: repeat(4, 1fr);
     gap: 20px;
+    grid-gap: 10px;
     flex-grow: 1;
     overflow-y: auto;
     justify-content: center;
@@ -225,13 +229,30 @@ footer {
 #pokemonSprite {
     height: 500px;
     object-fit: contain;  /* Ensure the images are scaled correctly */
-    /* margin-top: -140px; */
     margin-top: -125px;
-
-    /* margin-bottom: -50px; */
-    /* max-height: 325px; */
-    /* max-height: 225px; */
     max-height: 270px;
     max-width: 175%; /* Ensures image does not overflow div */
     justify-self: center;
+}
+
+#teamOptions {
+    display: flex;
+    justify-content: space-around;
+    padding: 20px;
+    grid-row-start: 4;
+    margin-left: 60px;
+    margin-right: 60px;
+}
+
+#teamAdditionButtons {
+    display: flex;
+    justify-content: space-around;
+    padding: 20px;
+}
+
+#addButton, #cancelButton {
+    height: 60px;
+    width: 175px;
+    font-size: 15pt;
+    border-radius: 50pt;
 }
